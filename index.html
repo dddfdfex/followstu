@@ -2,119 +2,312 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Brothers Studio – المساعد</title>
-  <link href="https://fonts.googleapis.com/css2?family=Estedad:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Brothers Studio – بوابة المساعد</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Estedad', 'Tajawal', sans-serif; }
-    :root { --bg: #05070a; --card: rgba(15,20,26,0.9); --border: #1e2a32; --text: #f0f4f8; --text-dim: #cbd5e1; --accent: #8b5cf6; --success: #10b981; --warning: #f59e0b; --error: #ef4444; --radius: 16px; --radius-sm: 12px; }
-    body { background: var(--bg); color: var(--text); min-height: 100vh; }
-    .intro-overlay { position: fixed; inset: 0; background: #030609; z-index: 2000; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; animation: fadeOutIntro 0.9s ease-in-out 2s forwards; }
-    @keyframes fadeOutIntro { 0% { opacity: 1; visibility: visible; } 100% { opacity: 0; visibility: hidden; } }
-    .intro-logo { width: 90px; height: 90px; border-radius: 25px; overflow: hidden; margin: 0 auto; }
-    .intro-logo img { width: 100%; height: 100%; object-fit: cover; }
-    .intro-text { font-size: 24px; font-weight: 900; text-align: center; margin-top: 10px; }
-    #login-view { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: radial-gradient(circle at 20% 30%, #0a121c, #030609); padding: 20px; }
-    .login-panel { background: var(--card); backdrop-filter: blur(12px); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 24px; max-width: 360px; width: 100%; text-align: center; }
-    .brand-mark { width: 80px; height: 80px; border-radius: 20px; margin: 0 auto 16px; overflow: hidden; }
-    .brand-mark img { width: 100%; height: 100%; object-fit: cover; }
-    .field { width: 100%; padding: 12px; background: #0f1419; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 22px; font-weight: 800; text-align: center; letter-spacing: 6px; outline: none; }
-    .field:focus { border-color: var(--accent); }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px; border: none; border-radius: var(--radius-sm); font-weight: 800; cursor: pointer; transition: 0.2s; width: 100%; margin-top: 12px; font-size: 14px; }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-success { background: var(--success); color: #fff; }
-    .btn-danger { background: var(--error); color: #fff; }
-    .btn-warning { background: var(--warning); color: #000; }
-    .btn-ghost { background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text-dim); }
-    .btn-sm { padding: 6px 12px; font-size: 12px; width: auto; margin-top: 0; }
-    .err-msg { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; border-radius: var(--radius-sm); padding: 8px; display: none; margin-bottom: 12px; font-size: 12px; }
-    #app-shell { display: none; flex-direction: column; min-height: 100vh; }
-    .app-header { background: rgba(5,7,10,0.96); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-    .header-brand { display: flex; align-items: center; gap: 8px; }
-    .header-icon { width: 36px; height: 36px; border-radius: 10px; overflow: hidden; }
-    .header-icon img { width: 100%; height: 100%; object-fit: cover; }
-    .user-pill { background: rgba(255,255,255,0.05); border-radius: 30px; padding: 4px 10px; display: flex; align-items: center; gap: 6px; font-size: 12px; }
-    .content { flex: 1; padding: 12px; max-width: 550px; margin: 0 auto; width: 100%; padding-bottom: 80px; }
-    .session-bar { background: rgba(0,0,0,0.4); border-radius: 14px; padding: 10px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 12px; }
-    .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
-    .stat-card { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 10px; text-align: center; }
-    .stat-val { font-size: 24px; font-weight: 900; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; margin-bottom: 12px; }
-    .card-hd { font-weight: 800; display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 13px; border-right: 2px solid var(--accent); padding-right: 8px; }
-    .scan-zone { background: rgba(139,92,246,0.05); border: 2px dashed rgba(139,92,246,0.3); border-radius: var(--radius); padding: 16px; text-align: center; margin-bottom: 12px; }
-    .scan-zone-icon { width: 50px; height: 50px; background: rgba(139,92,246,0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 24px; }
-    .result-box { border-radius: var(--radius); padding: 12px; display: none; margin-bottom: 12px; animation: popIn 0.2s ease; }
-    .result-box.success { background: rgba(16,185,129,0.12); border: 2px solid rgba(16,185,129,0.3); }
-    .result-box.warning { background: rgba(245,158,11,0.12); border: 2px solid rgba(245,158,11,0.3); }
-    .result-box.error { background: rgba(239,68,68,0.12); border: 2px solid rgba(239,68,68,0.3); }
-    .result-title { font-weight: 800; font-size: 15px; }
-    .result-sub { font-size: 11px; color: var(--text-dim); }
-    .log-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
-    .log-item { display: flex; align-items: center; gap: 10px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 12px; font-size: 12px; }
-    .log-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .log-dot.success { background: var(--success); }
-    .badge { display: inline-flex; padding: 2px 8px; border-radius: 30px; font-size: 10px; font-weight: 800; }
-    .badge-purple { background: rgba(139,92,246,0.15); color: var(--accent); }
-    .cam-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.98); z-index: 300; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-    .cam-overlay.open { display: flex; }
-    .cam-frame { width: 80vw; max-width: 320px; aspect-ratio: 1; border-radius: 20px; overflow: hidden; border: 2px solid var(--accent); position: relative; background: #000; }
-    .cam-frame video { width: 100%; height: 100%; object-fit: cover; }
-    .scan-bar { position: absolute; left: 0; right: 0; height: 2px; background: var(--accent); animation: scan 2s infinite; }
-    @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 500; display: none; align-items: center; justify-content: center; padding: 20px; }
-    .modal-overlay.open { display: flex; }
-    .modal-box { background: #0b1016; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; max-width: 340px; width: 100%; }
-    .footer { text-align: center; padding: 10px; font-size: 9px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 8px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', 'Poppins', sans-serif; }
+    :root {
+      --bg: #0A0E17; --card: rgba(17,24,39,0.9); --border: #1F2A3A; --text: #F3F4F6; --accent: #5B5FEF; --success: #19C37D; --warning: #F59E0B; --error: #FF5A5A;
+      --radius: 20px; --radius-sm: 12px;
+    }
+    body { background: var(--bg); color: var(--text); }
+    .header { background: #0F1622; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+    .logo { font-size: 24px; font-weight: 900; color: var(--accent); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .card { background: var(--card); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; }
+    .btn { padding: 10px 24px; border-radius: var(--radius-sm); border: none; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-secondary { background: var(--success); color: white; }
+    .btn-danger { background: var(--error); color: white; }
+    .btn-warning { background: var(--warning); color: black; }
+    .btn-sm { padding: 6px 16px; font-size: 13px; }
+    .flex { display: flex; gap: 16px; flex-wrap: wrap; margin: 20px 0; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .attended-item { background: rgba(25,195,125,0.1); border-radius: 8px; padding: 8px 12px; margin: 6px 0; }
+    .scanner-area { background: #000; border-radius: 20px; overflow: hidden; margin-top: 20px; }
+    .badge { padding: 4px 12px; border-radius: 30px; font-size: 12px; }
+    .badge-green { background: rgba(25,195,125,0.2); color: var(--success); }
+    .badge-red { background: rgba(255,90,90,0.2); color: var(--error); }
+    .footer { text-align: center; padding: 20px; font-size: 11px; color: #6B7280; border-top: 1px solid var(--border); margin-top: 40px; }
+    @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-<div class="intro-overlay" id="introOverlay"><div class="intro-logo"><img src="logo.png" alt="logo"></div><div class="intro-text">Brothers Studio<br><span style="font-size:14px;">Assistant Portal</span></div></div>
-<div id="login-view"><div class="login-panel"><div class="brand-mark"><img src="logo.png" alt="logo"></div><h2>تسجيل الدخول</h2><div style="font-size:12px;color:var(--accent);margin:8px 0;">المساعد</div><div id="login-error" class="err-msg"></div><input type="password" id="login-pass" class="field" placeholder="••••" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()"><button class="btn btn-primary" onclick="doLogin()"><i class="fa-solid fa-arrow-right-to-bracket"></i> دخول</button></div></div>
-<div id="app-shell"><header class="app-header"><div class="header-brand"><div class="header-icon"><img src="logo.png" alt="logo"></div><div><div style="font-size:13px;font-weight:800;">Brothers Studio</div><div style="font-size:9px;color:var(--accent);" id="group-label">—</div></div></div><div class="user-pill"><span id="assistant-name">—</span></div></header>
-<div class="content"><div class="session-bar"><span>📋 الجلسة: <strong id="session-status">مغلقة</strong></span><span id="session-entry-count">دخول: 0/5</span><button id="toggle-session-btn" class="btn btn-primary btn-sm" onclick="toggleSession()">بدء الجلسة</button></div>
-<div class="stats-grid"><div class="stat-card"><div class="stat-val" id="stat-students">0</div><div>طلابي</div></div><div class="stat-card"><div class="stat-val" id="stat-today">0</div><div>حضور اليوم</div></div><div class="stat-card"><div class="stat-val" id="stat-low">0</div><div>رصيد منخفض</div></div></div>
-<div class="scan-zone"><div class="scan-zone-icon"><i class="fa-solid fa-camera"></i></div><h3>مسح باركود الطالب</h3><button class="btn btn-primary btn-sm" onclick="openCamera()">📷 تشغيل الكاميرا</button></div>
-<div class="card"><div class="card-hd"><i class="fa-solid fa-keyboard"></i> إدخال يدوي</div><input type="text" id="manual-code" class="field" placeholder="كود الطالب" style="letter-spacing:0;text-align:right;font-size:16px;padding:8px;"><button class="btn btn-success btn-sm" onclick="manualAttend()">تسجيل حضور</button></div>
-<div id="result-box" class="result-box"><div class="result-title"></div><div class="result-sub"></div><button id="void-btn" class="btn btn-danger btn-sm" style="display:none;margin-top:8px;" onclick="openVoidModal()">طلب Void</button></div>
-<div class="card"><div class="card-hd"><span><i class="fa-solid fa-list-check"></i> سجل الجلسة</span><span id="session-group-badge" class="badge badge-purple"></span></div><div id="session-log" class="log-list"><p style="text-align:center;color:var(--text-muted);">لا توجد تسجيلات</p></div></div>
-<div class="card"><div class="card-hd"><i class="fa-solid fa-file-excel"></i> تقارير</div><button class="btn btn-primary btn-sm" onclick="exportAttendanceExcel()">📊 تحميل Excel للحضور</button></div>
-<div class="footer">Brothers Studio – نظام المساعد</div></div></div>
-<div class="cam-overlay" id="cam-overlay"><div class="cam-frame" id="cam-frame"><video id="cam-video" autoplay playsinline muted></video><div class="scan-bar"></div></div><div id="cam-status">جاري التشغيل...</div><button class="btn btn-ghost" onclick="closeCamera()">إلغاء</button></div>
-<div class="modal-overlay" id="void-reason-modal"><div class="modal-box"><div class="card-hd"><i class="fa-solid fa-circle-exclamation"></i> طلب Void</div><textarea id="void-reason" class="field" rows="3" placeholder="سبب طلب إلغاء الحضور..."></textarea><div class="modal-actions" style="display:flex;gap:8px;margin-top:16px;"><button class="btn btn-ghost btn-sm" onclick="closeVoidModal()">إلغاء</button><button class="btn btn-danger btn-sm" onclick="submitVoidRequest()">إرسال</button></div></div></div>
-<script>
-const firebaseConfig = { apiKey: "AIzaSyAMBxp98hk1C9K7sEF8et0JpwzLWjTPZ_4", authDomain: "omnia-store-7c8e4.firebaseapp.com", databaseURL: "https://omnia-store-7c8e4-default-rtdb.europe-west1.firebasedatabase.app", projectId: "omnia-store-7c8e4", storageBucket: "omnia-store-7c8e4.firebasestorage.app", messagingSenderId: "840762940236", appId: "1:840762940236:web:b5ea870c11e475e9ab8de9" };
-if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-let currentAssistant=null, assistantKey=null, assignedGroup=null, students={}, groups={}, todayAttendance={}, sessionData=null, filteredStudents=[], lastScannedStudent=null;
-let cameraStream=null, html5QrScanner=null, maxSessionLimit=5;
-const today = new Date().toISOString().slice(0,10);
+<div class="header"><div class="logo"><i class="fa-solid fa-chalkboard-user"></i> BROTHERS STUDIO – المساعد</div><button class="btn btn-sm" id="logoutBtn" style="background:rgba(255,255,255,0.1);"><i class="fa-solid fa-sign-out-alt"></i> خروج</button></div>
+<div class="container">
+  <div id="loginSection">
+    <div class="card" style="max-width: 400px; margin: 40px auto;">
+      <h3>دخول المساعد</h3>
+      <input type="password" id="assistantCode" class="field" placeholder="الكود الخاص" style="width:100%; padding:12px; margin:16px 0; background:#0f1419; border:1px solid var(--border); border-radius:12px; color:white;">
+      <button class="btn btn-primary" id="assistantLoginBtn" style="width:100%">دخول</button>
+      <div id="loginError" style="color:var(--error); margin-top:12px; display:none;"></div>
+    </div>
+  </div>
+  <div id="dashboardSection" style="display:none;">
+    <div class="grid">
+      <div class="card"><i class="fa-solid fa-users"></i> <strong>مجموعتي:</strong> <span id="groupName">---</span></div>
+      <div class="card"><i class="fa-solid fa-hourglass-half"></i> <strong>حالة الجلسة:</strong> <span id="sessionStatus" class="badge badge-red">لا توجد جلسة مفتوحة</span></div>
+    </div>
+    <div class="flex">
+      <button class="btn btn-primary" id="startSessionBtn"><i class="fa-solid fa-play"></i> بدء الجلسة</button>
+      <button class="btn btn-secondary" id="scanQrBtn"><i class="fa-solid fa-camera"></i> مسح QR</button>
+      <button class="btn btn-secondary" id="manualEntryBtn"><i class="fa-solid fa-keyboard"></i> إدخال يدوي</button>
+      <button class="btn btn-warning" id="voidRequestBtn"><i class="fa-solid fa-shield-alt"></i> طلب Void</button>
+      <button class="btn btn-danger" id="closeSessionBtn"><i class="fa-solid fa-lock"></i> تقفيل الجلسة</button>
+    </div>
+    <div id="qrScanner" style="display:none;">
+      <div id="reader" style="width:100%; max-width:500px;"></div>
+      <button class="btn btn-sm" id="stopScanner">إغلاق الكاميرا</button>
+    </div>
+    <div id="manualInput" style="display:none; background: var(--card); padding: 16px; border-radius: var(--radius-sm); margin: 16px 0;">
+      <input type="text" id="manualUid" placeholder="أدخل UID أو رقم الطالب" style="width:100%; padding:12px; background:#0f1419; border:1px solid var(--border); border-radius:12px; color:white;">
+      <button class="btn btn-primary btn-sm" id="submitManual" style="margin-top:12px;">تسجيل الحضور</button>
+    </div>
+    <div class="card">
+      <h4><i class="fa-solid fa-check-circle"></i> الحضور المسجل</h4>
+      <div id="attendedStudentsList"></div>
+      <h4 style="margin-top:20px;"><i class="fa-solid fa-notes-medical"></i> ملاحظات الجلسة</h4>
+      <textarea id="sessionNotes" rows="3" style="width:100%; background:#0f1419; border:1px solid var(--border); border-radius:12px; color:white; padding:10px;" placeholder="أي ملاحظات عن الجلسة..."></textarea>
+      <button class="btn btn-secondary btn-sm" id="saveNotesBtn" style="margin-top:8px;">حفظ الملاحظات</button>
+    </div>
+  </div>
+</div>
+<div class="footer">BROTHERS STUDIO ATTENDANCE SYSTEM - POWERED BY BROTHERS STUDIO - DEVELOPED BY ZIAD ELDRY - VERSION 1.0.0</div>
 
-function playBeep(t){ try{ let ctx=new (window.AudioContext||window.webkitAudioContext)(); let o=ctx.createOscillator(),g=ctx.createGain(); o.connect(g); g.connect(ctx.destination); g.gain.value=0.2; if(t==='success'){ o.frequency.value=880; o.type='sine'; g.gain.exponentialRampToValueAtTime(0.00001,ctx.currentTime+0.3); o.start(); o.stop(ctx.currentTime+0.3); }else if(t==='duplicate'){ o.frequency.value=440; o.type='sine'; g.gain.exponentialRampToValueAtTime(0.00001,ctx.currentTime+0.2); o.start(); o.stop(ctx.currentTime+0.2); }else{ o.frequency.value=220; o.type='sawtooth'; g.gain.exponentialRampToValueAtTime(0.00001,ctx.currentTime+0.4); o.start(); o.stop(ctx.currentTime+0.4); } }catch(e){} if(navigator.vibrate){ if(t==='success') navigator.vibrate([50,30,50]); else if(t==='duplicate') navigator.vibrate(200); else navigator.vibrate([200,100,200]); } }
-function showToast(msg,isError=false){ let t=document.createElement('div'); t.innerText=msg; t.style.position='fixed'; t.style.bottom='70px'; t.style.left='12px'; t.style.right='12px'; t.style.backgroundColor=isError?'rgba(239,68,68,0.9)':'rgba(16,185,129,0.9)'; t.style.color='white'; t.style.borderRadius='30px'; t.style.padding='10px'; t.style.textAlign='center'; t.style.zIndex='999'; t.style.fontSize='12px'; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
-setTimeout(()=>{let i=document.getElementById('introOverlay');if(i)i.style.display='none';},2500);
-function doLogin(){ let c=document.getElementById('login-pass').value.trim(); if(!c){ showError('أدخل الكود'); return; } db.ref('app_configurations/assistants').once('value',snap=>{ let all=snap.val()||{}; let found=null,fk=null; for(let [k,a] of Object.entries(all)){ if(String(a.code)===String(c)){ found=a; fk=k; break; } } if(found){ currentAssistant=found; assistantKey=fk; assignedGroup=found.group_reference||null; sessionStorage.setItem('assistant_mobile',JSON.stringify({assistant:found,key:fk,group:assignedGroup})); startApp(); }else{ showError('كود غير صحيح'); playBeep('error'); } }); }
-function showError(m){ let e=document.getElementById('login-error'); e.innerText=m; e.style.display='block'; setTimeout(()=>e.style.display='none',2500); }
-function startApp(){ document.getElementById('login-view').style.display='none'; document.getElementById('app-shell').style.display='flex'; document.getElementById('assistant-name').innerText=currentAssistant.name; if(!assignedGroup){ showToast('⚠️ لم يتم تعيين مجموعة',true); document.getElementById('group-label').innerText='غير معين'; }else{ document.getElementById('group-label').innerText='تحميل...'; } loadData(); }
-function loadData(){ db.ref('app_configurations/groups').on('value',snap=>{ groups=snap.val()||{}; if(assignedGroup&&groups[assignedGroup]) document.getElementById('group-label').innerText=groups[assignedGroup].title; }); db.ref('students_directory').on('value',snap=>{ students=snap.val()||{}; if(assignedGroup){ filteredStudents=Object.values(students).filter(s=>s.group_reference===assignedGroup); updateStats(); loadTodayAttendance(); } }); db.ref('app_configurations/max_session_limit').on('value',snap=>{ let v=snap.val(); if(v) maxSessionLimit=v; }); db.ref(`attendance_sessions/${assistantKey}`).on('value',snap=>{ sessionData=snap.val()||null; updateSessionUI(); }); }
-function updateStats(){ document.getElementById('stat-students').innerText=filteredStudents.length; let low=filteredStudents.filter(s=>parseInt(s.wallet_balance)<=2).length; document.getElementById('stat-low').innerText=low; }
-async function loadTodayAttendance(){ if(!assignedGroup) return; let snap=await db.ref(`attendance_ledger/${assignedGroup}/${today}`).once('value'); todayAttendance=snap.val()||{}; document.getElementById('stat-today').innerText=Object.keys(todayAttendance).length; renderSessionLog(); }
-function renderSessionLog(){ let container=document.getElementById('session-log'); let recs=Object.entries(todayAttendance); if(!recs.length){ container.innerHTML='<p style="text-align:center;color:var(--text-muted);">لا توجد تسجيلات</p>'; return; } let html=''; recs.forEach(([uid,data])=>{ let student=students[uid]; let name=student?student.name:uid; html+=`<div class="log-item"><div class="log-dot success"></div><div><div>${name}</div><div style="font-size:10px;color:var(--text-muted);">${data.timestamp||''}</div></div></div>`; }); container.innerHTML=html; }
-function updateSessionUI(){ let statusSpan=document.getElementById('session-status'); let countSpan=document.getElementById('session-entry-count'); let btn=document.getElementById('toggle-session-btn'); if(sessionData && sessionData.is_open){ statusSpan.innerText='مفتوحة'; statusSpan.style.color='var(--success)'; countSpan.innerText=`دخول: ${sessionData.entry_count||0}/${maxSessionLimit}`; if((sessionData.entry_count||0)>=maxSessionLimit){ btn.disabled=true; btn.innerText='🔒 الحد الأقصى'; }else{ btn.disabled=false; btn.innerHTML='إنهاء الجلسة وإرسال واتساب'; } }else{ statusSpan.innerText='مغلقة'; statusSpan.style.color='var(--text-muted)'; countSpan.innerText=`دخول: 0/${maxSessionLimit}`; btn.disabled=false; btn.innerHTML='بدء الجلسة'; } }
-async function toggleSession(){ if(!sessionData || !sessionData.is_open){ let entryCount=sessionData?.entry_count||0; if(entryCount>=maxSessionLimit){ showToast('لا يمكن بدء جلسة جديدة',true); return; } await db.ref(`attendance_sessions/${assistantKey}`).set({is_open:true,start_time:new Date().toISOString(),entry_count:entryCount+1,absent_students:{}}); showToast('✅ بدأت الجلسة'); }else{ let absentees={}; let attSnap=await db.ref(`attendance_ledger/${assignedGroup}/${today}`).once('value'); let attended=attSnap.val()||{}; filteredStudents.forEach(s=>{ if(!attended[s.uid]) absentees[s.uid]=s; }); if(Object.keys(absentees).length===0){ await db.ref(`attendance_sessions/${assistantKey}`).update({is_open:false,end_time:new Date().toISOString(),absent_count:0}); showToast('✅ انتهت الجلسة. لا غائبين.'); return; } let confirmMsg='سيتم إرسال واتساب للغائبين:\n'; for(let uid in absentees) confirmMsg+=`- ${absentees[uid].name}\n`; if(confirm(confirmMsg)){ let waTemplate=(await db.ref('app_configurations/wa_message').once('value')).val()||'مرحباً ولي أمر {student_name}، غياب عن حصة {date}'; let teacherName=(await db.ref('app_configurations/professor_identity').once('value')).val()||'المعلم'; for(let uid in absentees){ let s=absentees[uid]; let msg=waTemplate.replace(/{student_name}/g,s.name).replace(/{date}/g,today).replace(/{teacher_name}/g,teacherName); let waUrl=`https://wa.me/${(s.parent_phone||'').replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`; window.open(waUrl,'_blank'); await new Promise(r=>setTimeout(r,500)); } await db.ref(`attendance_sessions/${assistantKey}`).update({is_open:false,end_time:new Date().toISOString(),absent_count:Object.keys(absentees).length}); showToast(`✅ انتهت الجلسة. أرسلت ${Object.keys(absentees).length} رسالة.`); } } }
-async function processAttendance(uid){ if(!sessionData || !sessionData.is_open){ showToast('⚠️ الجلسة مغلقة، ابدأ جلسة أولاً',true); return; } if((sessionData.entry_count||0)>=maxSessionLimit){ showToast('تم الوصول للحد الأقصى',true); return; } let student=students[uid]; let rb=document.getElementById('result-box'); let rt=rb.querySelector('.result-title'); let rs=rb.querySelector('.result-sub'); let vb=document.getElementById('void-btn'); if(!student){ rb.className='result-box error'; rt.innerHTML='❌ غير موجود'; rs.innerText=`الكود ${uid} غير مسجل`; playBeep('error'); rb.style.display='block'; vb.style.display='none'; setTimeout(()=>rb.style.display='none',2000); return; } if(student.group_reference!==assignedGroup){ rb.className='result-box warning'; rt.innerHTML='⚠️ مجموعة مختلفة'; rs.innerText=`هذا الطالب ليس من مجموعتك`; playBeep('duplicate'); rb.style.display='block'; vb.style.display='none'; setTimeout(()=>rb.style.display='none',2000); return; } let voidRequests = (await db.ref('void_requests').once('value')).val() || {}; let hasPendingVoid = Object.values(voidRequests).some(req => req.student_uid === uid && req.date === today && req.status === 'pending'); if(hasPendingVoid){ rb.className='result-box error'; rt.innerHTML='⚠️ طلب Void قيد المراجعة'; rs.innerText='لا يمكن تسجيل الحضور حتى يتم البت في الطلب'; playBeep('error'); rb.style.display='block'; vb.style.display='none'; setTimeout(()=>rb.style.display='none',3000); return; } let ref=db.ref(`attendance_ledger/${assignedGroup}/${today}/${uid}`); let snap=await ref.once('value'); if(snap.exists()){ rb.className='result-box warning'; rt.innerHTML='🕒 مسجل مسبقاً'; rs.innerText=`${student.name} الساعة ${snap.val().timestamp}`; playBeep('duplicate'); rb.style.display='block'; vb.style.display='inline-flex'; lastScannedStudent={uid,name:student.name,record:snap.val()}; setTimeout(()=>rb.style.display='none',2500); }else{ let ts=new Date().toLocaleTimeString('ar-EG'); await ref.set({timestamp:ts,recorded_by:currentAssistant.name,date:today,student_name:student.name}); let newBal=Math.max(0,(parseInt(student.wallet_balance)||0)-1); await db.ref(`students_directory/${uid}/wallet_balance`).set(newBal); rb.className='result-box success'; rt.innerHTML='✅ تم تسجيل الحضور'; rs.innerText=`${student.name} - رصيد متبقي ${newBal}`; playBeep('success'); rb.style.display='block'; vb.style.display='none'; await loadTodayAttendance(); updateStats(); setTimeout(()=>rb.style.display='none',2000); } }
-function manualAttend(){ let code=document.getElementById('manual-code').value.trim(); if(code){ document.getElementById('manual-code').value=''; processAttendance(code); } }
-function openCamera(){ let overlay=document.getElementById('cam-overlay'); overlay.classList.add('open'); let videoElem=document.getElementById('cam-video'); if(html5QrScanner){ html5QrScanner.stop().then(()=>{ if(html5QrScanner) html5QrScanner.clear(); }).catch(()=>{}); html5QrScanner=null; } if(cameraStream){ cameraStream.getTracks().forEach(t=>t.stop()); cameraStream=null; } navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }).then(stream=>{ cameraStream=stream; videoElem.srcObject=stream; videoElem.play(); html5QrScanner = new Html5Qrcode("cam-video"); html5QrScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } }, (decodedText) => { closeCamera(); processAttendance(decodedText); }, (err) => { console.warn(err); }); document.getElementById('cam-status').innerHTML='✅ الكاميرا جاهزة، ضع الباركود'; }).catch(err=>{ document.getElementById('cam-status').innerHTML='❌ تعذر الوصول للكاميرا: '+err.message; console.error(err); }); }
-function closeCamera(){ if(html5QrScanner){ html5QrScanner.stop().then(()=>{ if(html5QrScanner) html5QrScanner.clear(); }).catch(()=>{}); html5QrScanner=null; } if(cameraStream){ cameraStream.getTracks().forEach(t=>t.stop()); cameraStream=null; } let video=document.getElementById('cam-video'); if(video) video.srcObject=null; document.getElementById('cam-overlay').classList.remove('open'); }
-function openVoidModal(){ if(!lastScannedStudent) return; document.getElementById('void-reason-modal').classList.add('open'); }
-function closeVoidModal(){ document.getElementById('void-reason-modal').classList.remove('open'); document.getElementById('void-reason').value=''; }
-async function submitVoidRequest(){ let reason=document.getElementById('void-reason').value.trim(); if(!reason){ alert('السبب مطلوب'); return; } let student=students[lastScannedStudent.uid]; if(!student) return; let existing=await db.ref('void_requests').once('value'); let hasTodayVoid=Object.values(existing.val()||{}).some(req=>req.student_uid===student.uid && req.date===today); if(hasTodayVoid){ alert('لا يمكن تقديم أكثر من طلب Void في اليوم الواحد'); closeVoidModal(); return; } await db.ref('void_requests').push({student_uid:student.uid,student_name:student.name,assistant_name:currentAssistant.name,assistant_key:assistantKey,date:today,reason:reason,status:'pending',original_record:lastScannedStudent.record}); showToast('✅ تم إرسال طلب Void للإدارة'); closeVoidModal(); lastScannedStudent=null; document.getElementById('void-btn').style.display='none'; }
-function exportAttendanceExcel(){ let data=[['الكود','الاسم','الحالة','وقت التسجيل','الرصيد']]; for(let s of filteredStudents){ let att=todayAttendance[s.uid]; data.push([s.uid,s.name,att?'حاضر':'غائب',att?.timestamp||'—',s.wallet_balance]); } let ws=XLSX.utils.aoa_to_sheet(data); let wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'الحضور'); XLSX.writeFile(wb,`attendance_${assignedGroup}_${today}.xlsx`); showToast('تم تصدير Excel'); }
-window.onload=()=>{ let saved=sessionStorage.getItem('assistant_mobile'); if(saved){ try{ let d=JSON.parse(saved); currentAssistant=d.assistant; assistantKey=d.key; assignedGroup=d.group; if(currentAssistant) startApp(); }catch(e){} } };
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAMBxp98hk1C9K7sEF8et0JpwzLWjTPZ_4",
+    authDomain: "omnia-store-7c8e4.firebaseapp.com",
+    databaseURL: "https://omnia-store-7c8e4-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "omnia-store-7c8e4",
+    storageBucket: "omnia-store-7c8e4.firebasestorage.app",
+    messagingSenderId: "840762940236",
+    appId: "1:840762940236:web:b5ea870c11e475e9ab8de9"
+  };
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  let currentAssistant = null;
+  let currentGroup = null;
+  let currentSessionKey = null;
+  let html5QrCode = null;
+
+  function showToast(msg, isError = false) {
+    let toast = document.createElement('div');
+    toast.innerText = msg;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.left = '20px';
+    toast.style.backgroundColor = isError ? '#FF5A5A' : '#19C37D';
+    toast.style.color = 'white';
+    toast.style.padding = '12px 20px';
+    toast.style.borderRadius = '12px';
+    toast.style.zIndex = '9999';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  document.getElementById('assistantLoginBtn').onclick = async () => {
+    let code = document.getElementById('assistantCode').value;
+    let assRef = await db.ref('app_configurations/assistants').once('value');
+    let assistants = assRef.val() || {};
+    let found = null;
+    for (let [id, as] of Object.entries(assistants)) {
+      if (as.code === code) { found = { id, ...as }; break; }
+    }
+    if (found) {
+      currentAssistant = found;
+      sessionStorage.setItem('assistant', JSON.stringify(found));
+      document.getElementById('loginSection').style.display = 'none';
+      document.getElementById('dashboardSection').style.display = 'block';
+      await loadGroupData(found.group_reference);
+      checkCurrentSession();
+    } else {
+      let err = document.getElementById('loginError');
+      err.innerText = '❌ كود غير صحيح';
+      err.style.display = 'block';
+      setTimeout(() => err.style.display = 'none', 2000);
+    }
+  };
+
+  async function loadGroupData(groupId) {
+    let groupSnap = await db.ref(`app_configurations/groups/${groupId}`).once('value');
+    currentGroup = groupSnap.val() ? { id: groupId, ...groupSnap.val() } : null;
+    document.getElementById('groupName').innerText = currentGroup?.title || 'غير محدد';
+  }
+
+  async function checkCurrentSession() {
+    let sessionsSnap = await db.ref('attendance_sessions').once('value');
+    let sessions = sessionsSnap.val() || {};
+    for (let [key, sess] of Object.entries(sessions)) {
+      if (sess.assistantId === currentAssistant.id && sess.is_open === true) {
+        currentSessionKey = key;
+        document.getElementById('sessionStatus').innerHTML = '<span class="badge badge-green">جلسة مفتوحة</span>';
+        loadAttendedStudents();
+        loadSessionNotes();
+        return;
+      }
+    }
+    currentSessionKey = null;
+    document.getElementById('sessionStatus').innerHTML = '<span class="badge badge-red">لا توجد جلسة مفتوحة</span>';
+    document.getElementById('attendedStudentsList').innerHTML = '<p>لا يوجد حضور بعد</p>';
+  }
+
+  document.getElementById('startSessionBtn').onclick = async () => {
+    if (!currentAssistant || !currentGroup) return;
+    if (currentSessionKey) { showToast('يوجد جلسة مفتوحة بالفعل', true); return; }
+    let newSessionRef = db.ref('attendance_sessions').push();
+    currentSessionKey = newSessionRef.key;
+    await newSessionRef.set({
+      assistantId: currentAssistant.id,
+      assistantName: currentAssistant.name,
+      groupId: currentGroup.id,
+      groupTitle: currentGroup.title,
+      is_open: true,
+      startTime: firebase.database.ServerValue.TIMESTAMP,
+      attended: {},
+      notes: ''
+    });
+    showToast('تم فتح الجلسة بنجاح');
+    document.getElementById('sessionStatus').innerHTML = '<span class="badge badge-green">جلسة مفتوحة</span>';
+  };
+
+  async function markAttendance(studentUid) {
+    if (!currentSessionKey) { showToast('لا توجد جلسة مفتوحة', true); return false; }
+    let studentSnap = await db.ref(`students_directory/${studentUid}`).once('value');
+    let student = studentSnap.val();
+    if (!student) { showToast('الطالب غير موجود', true); return false; }
+    if (student.wallet_balance <= 0) { showToast('الرصيد غير كافٍ', true); return false; }
+    let attendedRef = db.ref(`attendance_sessions/${currentSessionKey}/attended/${studentUid}`);
+    let already = await attendedRef.once('value');
+    if (already.exists()) { showToast('تم تسجيل هذا الطالب بالفعل', true); return false; }
+    // خصم حصة وتسجيل الحضور
+    let newBalance = student.wallet_balance - 1;
+    await db.ref(`students_directory/${studentUid}/wallet_balance`).set(newBalance);
+    await attendedRef.set({
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      balanceBefore: student.wallet_balance,
+      name: student.name
+    });
+    // تسجيل في attendance_ledger للتقارير
+    let today = new Date().toISOString().slice(0,10);
+    await db.ref(`attendance_ledger/${currentGroup.id}/${today}/${studentUid}`).set({ name: student.name, time: new Date().toISOString() });
+    showToast(`✅ تم تسجيل حضور ${student.name}`);
+    loadAttendedStudents();
+    return true;
+  }
+
+  async function loadAttendedStudents() {
+    if (!currentSessionKey) return;
+    let attendedSnap = await db.ref(`attendance_sessions/${currentSessionKey}/attended`).once('value');
+    let attended = attendedSnap.val() || {};
+    let container = document.getElementById('attendedStudentsList');
+    if (Object.keys(attended).length === 0) { container.innerHTML = '<p>لا يوجد حضور بعد</p>'; return; }
+    let html = '';
+    for (let [uid, data] of Object.entries(attended)) {
+      html += `<div class="attended-item"><i class="fa-solid fa-user-check"></i> ${data.name || uid} - الساعة: ${new Date(data.timestamp).toLocaleTimeString()}</div>`;
+    }
+    container.innerHTML = html;
+  }
+
+  async function loadSessionNotes() {
+    if (!currentSessionKey) return;
+    let notesSnap = await db.ref(`attendance_sessions/${currentSessionKey}/notes`).once('value');
+    document.getElementById('sessionNotes').value = notesSnap.val() || '';
+  }
+  document.getElementById('saveNotesBtn').onclick = async () => {
+    if (!currentSessionKey) return;
+    let notes = document.getElementById('sessionNotes').value;
+    await db.ref(`attendance_sessions/${currentSessionKey}/notes`).set(notes);
+    showToast('تم حفظ الملاحظات');
+  };
+
+  // QR Scanner
+  document.getElementById('scanQrBtn').onclick = () => {
+    document.getElementById('qrScanner').style.display = 'block';
+    if (html5QrCode) html5QrCode.stop().catch(e=>console.log);
+    html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, async (decodedText) => {
+      await markAttendance(decodedText);
+      html5QrCode.stop();
+      document.getElementById('qrScanner').style.display = 'none';
+    }, (err) => { console.warn(err); });
+  };
+  document.getElementById('stopScanner')?.addEventListener('click', () => {
+    if (html5QrCode) html5QrCode.stop();
+    document.getElementById('qrScanner').style.display = 'none';
+  });
+
+  document.getElementById('manualEntryBtn').onclick = () => { document.getElementById('manualInput').style.display = 'block'; };
+  document.getElementById('submitManual').onclick = async () => {
+    let uid = document.getElementById('manualUid').value.trim();
+    if (uid) await markAttendance(uid);
+    document.getElementById('manualUid').value = '';
+  };
+
+  document.getElementById('voidRequestBtn').onclick = async () => {
+    let studentUid = prompt('أدخل UID الطالب لطلب Void:');
+    let reason = prompt('سبب الطلب:');
+    if (studentUid && reason) {
+      let studentSnap = await db.ref(`students_directory/${studentUid}`).once('value');
+      if (!studentSnap.exists()) { showToast('الطالب غير موجود', true); return; }
+      await db.ref('void_requests').push({
+        student_uid: studentUid,
+        student_name: studentSnap.val().name,
+        assistant_id: currentAssistant.id,
+        assistant_name: currentAssistant.name,
+        reason: reason,
+        date: new Date().toISOString().slice(0,10),
+        status: 'pending'
+      });
+      showToast('تم إرسال طلب Void إلى الإدارة');
+    }
+  };
+
+  document.getElementById('closeSessionBtn').onclick = async () => {
+    if (!currentSessionKey) { showToast('لا توجد جلسة مفتوحة', true); return; }
+    // مراجعة الجلسة
+    let attendedSnap = await db.ref(`attendance_sessions/${currentSessionKey}/attended`).once('value');
+    let attended = attendedSnap.val() || {};
+    let groupStudentsSnap = await db.ref('students_directory').once('value');
+    let allStudents = groupStudentsSnap.val() || {};
+    let presentList = [], absentList = [];
+    for (let [uid, stu] of Object.entries(allStudents)) {
+      if (stu.group_reference === currentGroup.id) {
+        if (attended[uid]) presentList.push(stu.name);
+        else absentList.push(stu.name);
+      }
+    }
+    // إنشاء ملفات Excel
+    let wsPresent = XLSX.utils.json_to_sheet(presentList.map(n=>({ 'اسم الطالب': n })));
+    let wsAbsent = XLSX.utils.json_to_sheet(absentList.map(n=>({ 'اسم الطالب': n })));
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, wsPresent, 'الحضور');
+    XLSX.utils.book_append_sheet(wb, wsAbsent, 'الغياب');
+    XLSX.writeFile(wb, `جلسة_${currentGroup.title}_${new Date().toISOString().slice(0,10)}.xlsx`);
+    // إغلاق الجلسة
+    await db.ref(`attendance_sessions/${currentSessionKey}`).update({ is_open: false, endTime: firebase.database.ServerValue.TIMESTAMP });
+    currentSessionKey = null;
+    document.getElementById('sessionStatus').innerHTML = '<span class="badge badge-red">لا توجد جلسة مفتوحة</span>';
+    document.getElementById('attendedStudentsList').innerHTML = '<p>تم تقفيل الجلسة</p>';
+    showToast('تم تقفيل الجلسة بنجاح، تم تحميل ملفي الحضور والغياب');
+  };
+
+  document.getElementById('logoutBtn').onclick = () => { sessionStorage.clear(); location.reload(); };
+
+  if (sessionStorage.getItem('assistant')) {
+    let saved = JSON.parse(sessionStorage.getItem('assistant'));
+    currentAssistant = saved;
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('dashboardSection').style.display = 'block';
+    loadGroupData(saved.group_reference).then(() => checkCurrentSession());
+  }
 </script>
 </body>
 </html>
