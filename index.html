@@ -1,313 +1,875 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Brothers Studio – بوابة المساعد</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', 'Poppins', sans-serif; }
-    :root {
-      --bg: #0A0E17; --card: rgba(17,24,39,0.9); --border: #1F2A3A; --text: #F3F4F6; --accent: #5B5FEF; --success: #19C37D; --warning: #F59E0B; --error: #FF5A5A;
-      --radius: 20px; --radius-sm: 12px;
-    }
-    body { background: var(--bg); color: var(--text); }
-    .header { background: #0F1622; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-    .logo { font-size: 24px; font-weight: 900; color: var(--accent); }
-    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
-    .card { background: var(--card); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; }
-    .btn { padding: 10px 24px; border-radius: var(--radius-sm); border: none; font-weight: 700; cursor: pointer; transition: 0.2s; }
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-secondary { background: var(--success); color: white; }
-    .btn-danger { background: var(--error); color: white; }
-    .btn-warning { background: var(--warning); color: black; }
-    .btn-sm { padding: 6px 16px; font-size: 13px; }
-    .flex { display: flex; gap: 16px; flex-wrap: wrap; margin: 20px 0; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .attended-item { background: rgba(25,195,125,0.1); border-radius: 8px; padding: 8px 12px; margin: 6px 0; }
-    .scanner-area { background: #000; border-radius: 20px; overflow: hidden; margin-top: 20px; }
-    .badge { padding: 4px 12px; border-radius: 30px; font-size: 12px; }
-    .badge-green { background: rgba(25,195,125,0.2); color: var(--success); }
-    .badge-red { background: rgba(255,90,90,0.2); color: var(--error); }
-    .footer { text-align: center; padding: 20px; font-size: 11px; color: #6B7280; border-top: 1px solid var(--border); margin-top: 40px; }
-    @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-  </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brothers Studio — بوابة المساعد</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05080F;--s1:#080D18;--s2:#0C1220;--s3:#101828;--s4:#141F30;
+  --bd:#182033;--bd2:#1E2D45;
+  --t1:#E8EEFF;--t2:#7B90BC;--t3:#3D5277;--t4:#243348;
+  --blue:#4F6EF7;--blue2:#7B96FF;--blueg:rgba(79,110,247,.13);--blueb:rgba(79,110,247,.28);
+  --teal:#0EC4A0;--teal2:#3DDFC0;--tealg:rgba(14,196,160,.11);--tealb:rgba(14,196,160,.22);
+  --red:#F25252;--redg:rgba(242,82,82,.10);--redb:rgba(242,82,82,.22);
+  --amber:#E8A020;--amberg:rgba(232,160,32,.10);--amberb:rgba(232,160,32,.22);
+  --violet:#8B5CF6;--violetg:rgba(139,92,246,.10);
+  --r:14px;--r2:10px;--r3:7px;
+  --sh:0 4px 24px rgba(0,0,0,.4);--sh2:0 8px 40px rgba(0,0,0,.5);
+}
+html,body{font-family:'Cairo','Poppins',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh}
+
+/* SPLASH */
+#SP{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;transition:opacity .5s .2s,visibility .5s .2s}
+#SP.out{opacity:0;visibility:hidden;pointer-events:none}
+.sp-box{width:80px;height:80px;border-radius:22px;background:linear-gradient(145deg,var(--s2),var(--s3));border:1px solid var(--bd2);display:flex;align-items:center;justify-content:center;box-shadow:var(--sh2);animation:spPop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes spPop{from{transform:scale(.4) rotate(-15deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.sp-logo{width:52px;height:52px;object-fit:contain}
+.sp-name{font-size:17px;font-weight:900;letter-spacing:2px;color:var(--blue2);animation:spUp .5s ease .2s both;font-family:'Poppins'}
+.sp-tag{font-size:9px;letter-spacing:3px;color:var(--t3);text-transform:uppercase;font-family:'Poppins';animation:spUp .5s ease .3s both}
+.sp-bar{width:140px;height:2px;background:var(--bd);border-radius:4px;overflow:hidden;animation:spUp .4s ease .4s both}
+.sp-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));animation:spFill 1.6s ease .55s forwards;width:0}
+@keyframes spUp{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes spFill{to{width:100%}}
+
+/* LOGIN */
+#LG{display:none;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(ellipse at 30% 25%,rgba(79,110,247,.07),transparent 55%)}
+#LG.show{display:flex}
+.lg-card{background:var(--s1);border:1px solid var(--bd2);border-radius:22px;padding:40px 34px;width:100%;max-width:380px;text-align:center;box-shadow:var(--sh2);animation:fadeUp .4s ease}
+@keyframes fadeUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.lg-logo-wrap{width:68px;height:68px;border-radius:18px;margin:0 auto 16px;background:var(--s2);border:1px solid var(--bd2);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.lg-logo{width:48px;height:48px;object-fit:contain}
+.lg-title{font-size:21px;font-weight:900;margin-bottom:2px}
+.lg-sub{font-size:9px;font-family:'Poppins';letter-spacing:2.5px;color:var(--t3);text-transform:uppercase;margin-bottom:18px}
+.role-chip{display:inline-flex;align-items:center;gap:6px;background:var(--tealg);border:1px solid var(--tealb);color:var(--teal);padding:5px 15px;border-radius:40px;font-size:11px;font-weight:700;margin-bottom:20px}
+.F{width:100%;padding:12px 15px;background:#03060E;border:1px solid var(--bd);border-radius:var(--r2);color:var(--t1);font-family:'Cairo';font-size:13px;outline:none;transition:.2s}
+.F:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blueg)}
+.F.pass{font-size:22px;font-weight:800;letter-spacing:10px;text-align:center;padding:14px}
+.Flbl{display:block;text-align:right;font-size:11px;font-weight:700;color:var(--t3);margin-bottom:4px;margin-top:10px}
+.Ferr{background:var(--redg);border:1px solid var(--redb);color:#FCA5A5;border-radius:var(--r2);padding:8px 13px;font-size:12px;margin-bottom:10px;display:none}
+select.F{cursor:pointer}
+select.F option{background:var(--s2)}
+textarea.F{resize:vertical;min-height:68px}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;background:rgba(5,8,15,.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;z-index:100}
+.tb-logo-wrap{display:flex;align-items:center;gap:10px}
+.tb-logo-box{width:34px;height:34px;border-radius:10px;background:var(--s2);border:1px solid var(--bd2);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.tb-logo{width:24px;height:24px;object-fit:contain}
+.tb-brand{font-size:13px;font-weight:900}
+.tb-sub{font-size:9px;font-family:'Poppins';color:var(--t3);letter-spacing:1px}
+.tb-r{display:flex;align-items:center;gap:10px}
+.tb-user-chip{background:var(--s2);border:1px solid var(--bd2);border-radius:10px;padding:5px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px}
+.tb-user-chip .av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--blue));display:flex;align-items:center;justify-content:center;font-size:11px}
+
+/* MAIN */
+#MAIN{display:none}
+#MAIN.show{display:block}
+.page{max-width:900px;margin:0 auto;padding:20px 16px}
+
+/* CARDS */
+.card{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:18px 20px;margin-bottom:16px}
+.card-glow-teal{border-color:var(--tealb);box-shadow:0 0 20px rgba(14,196,160,.06)}
+.card-glow-blue{border-color:var(--blueb);box-shadow:0 0 20px rgba(79,110,247,.06)}
+.card-glow-red{border-color:var(--redb);box-shadow:0 0 20px rgba(242,82,82,.06)}
+.chd{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:11px;border-bottom:1px solid var(--bd);color:var(--t2)}
+.chd i{font-size:14px}
+.cht{color:var(--t1);font-size:14px}
+
+/* STATS ROW */
+.sr{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.sc{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:14px;text-align:center;transition:.2s}
+.sc-val{font-size:26px;font-weight:900;line-height:1}
+.sc-lbl{font-size:10px;color:var(--t3);margin-top:3px}
+
+/* BUTTON */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 17px;border:none;border-radius:var(--r2);font-family:'Cairo';font-weight:700;font-size:12px;cursor:pointer;transition:.18s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn-p{background:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(79,110,247,.3)}
+.btn-p:hover{background:var(--blue2)}
+.btn-t{background:var(--teal);color:#041210;box-shadow:0 4px 14px var(--tealg)}
+.btn-t:hover{background:var(--teal2)}
+.btn-r{background:var(--red);color:#fff;box-shadow:0 4px 12px var(--redg)}
+.btn-a{background:var(--amber);color:#110900}
+.btn-v{background:var(--violet);color:#fff}
+.btn-gh{background:rgba(255,255,255,.04);border:1px solid var(--bd);color:var(--t2)}
+.btn-gh:hover{color:var(--t1);border-color:var(--blue2)}
+.btn-sm{padding:7px 13px;font-size:11px}
+.btn-xs{padding:4px 9px;font-size:10px}
+.btn-fw{width:100%;margin-top:8px}
+.btn-ic{width:32px;height:32px;padding:0;border-radius:var(--r3)}
+
+/* BADGE */
+.b{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:800;white-space:nowrap}
+.b-bl{background:var(--blueg);color:var(--blue2);border:1px solid var(--blueb)}
+.b-tl{background:var(--tealg);color:var(--teal);border:1px solid var(--tealb)}
+.b-rd{background:var(--redg);color:var(--red);border:1px solid var(--redb)}
+.b-am{background:var(--amberg);color:var(--amber);border:1px solid var(--amberb)}
+.b-vi{background:var(--violetg);color:var(--violet);border:1px solid rgba(139,92,246,.25)}
+.b-gy{background:rgba(255,255,255,.04);color:var(--t3);border:1px solid var(--bd)}
+
+/* TOAST */
+#TC{position:fixed;bottom:18px;left:18px;z-index:9999;display:flex;flex-direction:column-reverse;gap:6px}
+.toast{padding:11px 16px;border-radius:11px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:9px;min-width:200px;max-width:310px;animation:tIn .3s ease;box-shadow:var(--sh2)}
+.toast.ok{background:linear-gradient(135deg,#071810,#0A2016);border:1px solid var(--tealb);color:var(--teal2)}
+.toast.err{background:linear-gradient(135deg,#180707,#200A0A);border:1px solid var(--redb);color:#FCA5A5}
+.toast.warn{background:linear-gradient(135deg,#1A1007,#201408);border:1px solid var(--amberb);color:#FDE68A}
+.toast.info{background:linear-gradient(135deg,#060D1A,#0A1325);border:1px solid var(--blueb);color:var(--blue2)}
+@keyframes tIn{from{transform:translateX(-16px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);z-index:1000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.open{display:flex}
+.mbox{background:var(--s2);border:1px solid var(--bd2);border-radius:18px;padding:22px;width:100%;max-width:480px;box-shadow:var(--sh2);animation:mIn .22s ease}
+@keyframes mIn{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.mtitle{font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px;margin-bottom:15px;padding-bottom:12px;border-bottom:1px solid var(--bd)}
+.mact{display:flex;gap:9px;margin-top:15px;justify-content:flex-end}
+
+/* SESSION PHASE INDICATOR */
+.phase-bar{display:flex;align-items:center;gap:0;margin-bottom:18px;border-radius:var(--r);overflow:hidden;border:1px solid var(--bd)}
+.ph{flex:1;padding:9px 4px;text-align:center;font-size:10px;font-weight:700;color:var(--t4);background:var(--s3);transition:.3s;display:flex;align-items:center;justify-content:center;gap:5px;border-right:1px solid var(--bd)}
+.ph:last-child{border-right:none}
+.ph.done{background:var(--tealg);color:var(--teal)}
+.ph.active{background:var(--blueg);color:var(--blue2);animation:phPulse 2s infinite}
+@keyframes phPulse{0%,100%{box-shadow:none}50%{box-shadow:inset 0 0 12px rgba(79,110,247,.15)}}
+
+/* QR SCANNER */
+.scanner-wrap{background:#000;border-radius:var(--r);overflow:hidden;position:relative}
+.scan-frame{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:2}
+.scan-border{width:220px;height:220px;border:2px solid var(--teal);border-radius:16px;box-shadow:0 0 0 3000px rgba(0,0,0,.5);position:relative}
+.scan-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--teal),transparent);animation:scanAnim 1.8s ease-in-out infinite}
+@keyframes scanAnim{0%{top:0;opacity:1}100%{top:100%;opacity:0}}
+.scan-corner{position:absolute;width:22px;height:22px}
+.sc-tl{top:-1px;right:-1px;border-top:3px solid var(--teal2);border-right:3px solid var(--teal2);border-radius:0 4px 0 0}
+.sc-tr{top:-1px;left:-1px;border-top:3px solid var(--teal2);border-left:3px solid var(--teal2);border-radius:4px 0 0 0}
+.sc-bl{bottom:-1px;right:-1px;border-bottom:3px solid var(--teal2);border-right:3px solid var(--teal2);border-radius:0 0 0 4px}
+.sc-br{bottom:-1px;left:-1px;border-bottom:3px solid var(--teal2);border-left:3px solid var(--teal2);border-radius:0 0 4px 0}
+
+/* ATTENDED LIST */
+.att-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--r2);border:1px solid var(--tealb);background:var(--tealg);margin-bottom:7px;animation:fadeUp .3s ease}
+.att-num{width:28px;height:28px;border-radius:50%;background:var(--teal);color:#041210;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.att-name{font-weight:700;font-size:13px;flex:1}
+.att-time{font-size:10px;color:var(--t3)}
+
+.abs-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--r2);border:1px solid var(--redb);background:var(--redg);margin-bottom:7px}
+.abs-num{width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* TIMER */
+.session-timer{font-size:32px;font-weight:900;font-family:'Poppins';color:var(--blue2);text-align:center;letter-spacing:2px;margin:4px 0}
+.timer-lbl{font-size:10px;color:var(--t3);text-align:center;letter-spacing:1px;text-transform:uppercase;font-family:'Poppins'}
+
+/* NET STATUS */
+#netbar{display:none;padding:7px 14px;text-align:center;font-size:12px;font-weight:700;position:sticky;top:56px;z-index:99}
+#netbar.offline{background:var(--red);display:block}
+#netbar.online{background:var(--teal);color:#041210;display:block}
+
+/* MISC */
+.row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.empty{text-align:center;padding:30px 20px;color:var(--t3)}
+.empty i{font-size:28px;opacity:.15;display:block;margin-bottom:8px}
+.empty p{font-size:11px}
+.divhr{height:1px;background:var(--bd);margin:12px 0}
+.low-bal-chip{background:var(--redg);border:1px solid var(--redb);border-radius:var(--r2);padding:8px 12px;font-size:11px;color:#FCA5A5;display:flex;align-items:center;gap:7px}
+
+/* CONFIRM MODAL */
+.confirm-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 14px}
+
+@media(max-width:600px){.sr{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-<div class="header"><div class="logo"><i class="fa-solid fa-chalkboard-user"></i> BROTHERS STUDIO – المساعد</div><button class="btn btn-sm" id="logoutBtn" style="background:rgba(255,255,255,0.1);"><i class="fa-solid fa-sign-out-alt"></i> خروج</button></div>
-<div class="container">
-  <div id="loginSection">
-    <div class="card" style="max-width: 400px; margin: 40px auto;">
-      <h3>دخول المساعد</h3>
-      <input type="password" id="assistantCode" class="field" placeholder="الكود الخاص" style="width:100%; padding:12px; margin:16px 0; background:#0f1419; border:1px solid var(--border); border-radius:12px; color:white;">
-      <button class="btn btn-primary" id="assistantLoginBtn" style="width:100%">دخول</button>
-      <div id="loginError" style="color:var(--error); margin-top:12px; display:none;"></div>
-    </div>
+
+<div id="SP">
+  <div class="sp-box"><img src="logo.png" class="sp-logo" alt="" onerror="this.style.display='none';this.parentNode.innerHTML='<i class=\'fa-solid fa-chalkboard-user\' style=\'font-size:24px;color:var(--teal)\'></i>'"></div>
+  <div class="sp-name">BROTHERS STUDIO</div>
+  <div class="sp-tag">Assistant Portal</div>
+  <div class="sp-bar"><div class="sp-fill"></div></div>
+</div>
+
+<div id="TC"></div>
+
+<!-- LOGIN -->
+<div id="LG">
+  <div class="lg-card">
+    <div class="lg-logo-wrap"><img src="logo.png" class="lg-logo" alt="" onerror="this.style.display='none';this.parentNode.innerHTML='<i class=\'fa-solid fa-chalkboard-user\' style=\'font-size:22px;color:var(--teal)\'></i>'"></div>
+    <div class="lg-title">Brothers Studio</div>
+    <div class="lg-sub">Assistant Portal</div>
+    <div class="role-chip"><i class="fa-solid fa-chalkboard-user"></i> دخول المساعد</div>
+    <div id="LERR" class="Ferr"><i class="fa-solid fa-circle-xmark"></i> كود غير صحيح، حاول مرة أخرى</div>
+    <input type="password" id="LPASS" class="F pass" placeholder="••••" maxlength="20" autocomplete="off">
+    <button class="btn btn-t btn-fw" style="margin-top:14px" onclick="doLogin()"><i class="fa-solid fa-right-to-bracket"></i> دخول</button>
   </div>
-  <div id="dashboardSection" style="display:none;">
-    <div class="grid">
-      <div class="card"><i class="fa-solid fa-users"></i> <strong>مجموعتي:</strong> <span id="groupName">---</span></div>
-      <div class="card"><i class="fa-solid fa-hourglass-half"></i> <strong>حالة الجلسة:</strong> <span id="sessionStatus" class="badge badge-red">لا توجد جلسة مفتوحة</span></div>
+</div>
+
+<!-- NETWORK STATUS -->
+<div id="netbar"></div>
+
+<!-- MAIN APP -->
+<div id="MAIN">
+  <header class="topbar">
+    <div class="tb-logo-wrap">
+      <div class="tb-logo-box"><img src="logo.png" class="tb-logo" alt="" onerror="this.style.display='none';this.parentNode.innerHTML='<i class=\'fa-solid fa-graduation-cap\' style=\'font-size:13px;color:var(--blue2)\'></i>'"></div>
+      <div><div class="tb-brand">Brothers Studio</div><div class="tb-sub">ASSISTANT PORTAL</div></div>
     </div>
-    <div class="flex">
-      <button class="btn btn-primary" id="startSessionBtn"><i class="fa-solid fa-play"></i> بدء الجلسة</button>
-      <button class="btn btn-secondary" id="scanQrBtn"><i class="fa-solid fa-camera"></i> مسح QR</button>
-      <button class="btn btn-secondary" id="manualEntryBtn"><i class="fa-solid fa-keyboard"></i> إدخال يدوي</button>
-      <button class="btn btn-warning" id="voidRequestBtn"><i class="fa-solid fa-shield-alt"></i> طلب Void</button>
-      <button class="btn btn-danger" id="closeSessionBtn"><i class="fa-solid fa-lock"></i> تقفيل الجلسة</button>
+    <div class="tb-r">
+      <div class="tb-user-chip"><div class="av"><i class="fa-solid fa-user"></i></div><span id="TB_NAME">—</span></div>
+      <button class="btn btn-gh btn-sm" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
     </div>
-    <div id="qrScanner" style="display:none;">
-      <div id="reader" style="width:100%; max-width:500px;"></div>
-      <button class="btn btn-sm" id="stopScanner">إغلاق الكاميرا</button>
+  </header>
+
+  <div class="page">
+
+    <!-- SESSION PHASE BAR -->
+    <div class="phase-bar">
+      <div class="ph active" id="PH0"><i class="fa-solid fa-play"></i> بدء الجلسة</div>
+      <div class="ph" id="PH1"><i class="fa-solid fa-qrcode"></i> تسجيل الحضور</div>
+      <div class="ph" id="PH2"><i class="fa-solid fa-clipboard-list"></i> المراجعة</div>
+      <div class="ph" id="PH3"><i class="fa-solid fa-lock"></i> تقفيل</div>
     </div>
-    <div id="manualInput" style="display:none; background: var(--card); padding: 16px; border-radius: var(--radius-sm); margin: 16px 0;">
-      <input type="text" id="manualUid" placeholder="أدخل UID أو رقم الطالب" style="width:100%; padding:12px; background:#0f1419; border:1px solid var(--border); border-radius:12px; color:white;">
-      <button class="btn btn-primary btn-sm" id="submitManual" style="margin-top:12px;">تسجيل الحضور</button>
+
+    <!-- GROUP INFO -->
+    <div class="card card-glow-blue" id="INFO_CARD">
+      <div class="chd"><i class="fa-solid fa-layer-group" style="color:var(--blue2)"></i><span class="cht">معلومات الحصة</span></div>
+      <div class="g2">
+        <div>
+          <div style="font-size:11px;color:var(--t3);margin-bottom:4px">المجموعة</div>
+          <div style="font-weight:900;font-size:17px" id="GRP_NAME">—</div>
+          <div style="font-size:11px;color:var(--t2);margin-top:3px" id="GRP_META">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--t3);margin-bottom:4px">السنتر</div>
+          <div style="font-weight:700;font-size:13px" id="GRP_CENTER">—</div>
+          <div style="font-size:11px;color:var(--t2);margin-top:3px" id="GRP_TIME">—</div>
+        </div>
+      </div>
+      <!-- No session yet -->
+      <div id="NO_SESS" style="margin-top:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <span class="b b-gy"><i class="fa-solid fa-circle"></i> لا توجد جلسة مفتوحة</span>
+          <button class="btn btn-t" id="START_BTN" onclick="startSession()"><i class="fa-solid fa-play"></i> بدء الجلسة الآن</button>
+        </div>
+      </div>
+      <!-- Session active -->
+      <div id="SESS_ACTIVE" style="display:none;margin-top:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+          <div>
+            <span class="b b-tl" style="animation:pulse 2s infinite"><i class="fa-solid fa-circle"></i> جلسة مفتوحة</span>
+            <div class="session-timer" id="TIMER">00:00:00</div>
+            <div class="timer-lbl">مدة الجلسة</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span class="b b-bl" id="PRES_CNT">0 حضور</span>
+            <span class="b b-rd" id="ABS_CNT">0 غياب</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <h4><i class="fa-solid fa-check-circle"></i> الحضور المسجل</h4>
-      <div id="attendedStudentsList"></div>
-      <h4 style="margin-top:20px;"><i class="fa-solid fa-notes-medical"></i> ملاحظات الجلسة</h4>
-      <textarea id="sessionNotes" rows="3" style="width:100%; background:#0f1419; border:1px solid var(--border); border-radius:12px; color:white; padding:10px;" placeholder="أي ملاحظات عن الجلسة..."></textarea>
-      <button class="btn btn-secondary btn-sm" id="saveNotesBtn" style="margin-top:8px;">حفظ الملاحظات</button>
+
+    <!-- TODAY'S SESSIONS for this assistant -->
+    <div id="TODAY_SESSIONS" style="display:none"></div>
+
+    <!-- ATTENDANCE ACTIONS -->
+    <div id="ATT_SECTION" style="display:none">
+      <div class="row">
+        <button class="btn btn-t" id="SCAN_BTN" onclick="toggleScanner()"><i class="fa-solid fa-camera"></i> مسح QR</button>
+        <button class="btn btn-p" onclick="toggleManual()"><i class="fa-solid fa-keyboard"></i> إدخال يدوي</button>
+        <button class="btn btn-v" onclick="openVoidModal()"><i class="fa-solid fa-shield-exclamation"></i> طلب Void</button>
+        <button class="btn btn-a" onclick="openNotesModal()"><i class="fa-solid fa-pen-to-square"></i> ملاحظات</button>
+      </div>
+
+      <!-- QR Scanner -->
+      <div id="QR_WRAP" style="display:none;margin-bottom:16px">
+        <div class="card card-glow-teal" style="padding:0;overflow:hidden">
+          <div class="scanner-wrap" style="min-height:280px">
+            <div id="QR_READER" style="width:100%"></div>
+            <div class="scan-frame">
+              <div class="scan-border">
+                <div class="scan-line"></div>
+                <div class="scan-corner sc-tl"></div>
+                <div class="scan-corner sc-tr"></div>
+                <div class="scan-corner sc-bl"></div>
+                <div class="scan-corner sc-br"></div>
+              </div>
+            </div>
+          </div>
+          <div style="padding:10px 16px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:12px;color:var(--t2)">وجّه كاميرا الهاتف على QR الطالب</span>
+            <button class="btn btn-gh btn-sm" onclick="stopScanner()"><i class="fa-solid fa-xmark"></i> إغلاق</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manual Input -->
+      <div id="MAN_WRAP" style="display:none;margin-bottom:16px">
+        <div class="card">
+          <div class="chd"><i class="fa-solid fa-keyboard" style="color:var(--blue2)"></i><span class="cht">إدخال يدوي</span></div>
+          <div style="display:flex;gap:9px">
+            <input id="MAN_UID" class="F" placeholder="أدخل رقم الطالب (UID)" style="flex:1" onkeydown="if(event.key==='Enter')doManual()">
+            <button class="btn btn-p" onclick="doManual()"><i class="fa-solid fa-check"></i> تسجيل</button>
+          </div>
+          <div id="MAN_FB" style="font-size:12px;margin-top:8px;min-height:18px"></div>
+        </div>
+      </div>
+
+      <!-- Attended List -->
+      <div class="card card-glow-teal">
+        <div class="chd"><i class="fa-solid fa-user-check" style="color:var(--teal)"></i><span class="cht">الحضور المسجل</span><span class="b b-tl" style="margin-right:auto" id="ATT_CNT_LBL">0</span></div>
+        <div id="ATT_LIST"><div class="empty"><i class="fa-solid fa-qrcode"></i><p>لم يتم تسجيل أي حضور بعد</p></div></div>
+      </div>
+    </div>
+
+    <!-- CLOSE SESSION BUTTON (shown only when session active) -->
+    <div id="CLOSE_WRAP" style="display:none;margin-bottom:16px">
+      <div class="card card-glow-red" style="text-align:center">
+        <div style="font-size:13px;font-weight:700;color:var(--t2);margin-bottom:12px">
+          <i class="fa-solid fa-triangle-exclamation" style="color:var(--amber)"></i>
+          انتهت الحصة؟ اضغط لمراجعة الكشف وإنهاء التسجيل
+        </div>
+        <button class="btn btn-r" onclick="openReviewModal()"><i class="fa-solid fa-clipboard-check"></i> مراجعة وإنهاء الجلسة</button>
+        <div style="font-size:10px;color:var(--t3);margin-top:8px">لن يتم إغلاق الجلسة حتى يتم إرسال رسائل الغياب لأولياء الأمور</div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="text-align:center;padding:20px 0 8px;font-size:9px;color:var(--t4);font-family:'Poppins';letter-spacing:.5px">
+      BROTHERS STUDIO ATTENDANCE SYSTEM • V1.0.0 • ZIAD ELDRY
     </div>
   </div>
 </div>
-<div class="footer">BROTHERS STUDIO ATTENDANCE SYSTEM - POWERED BY BROTHERS STUDIO - DEVELOPED BY ZIAD ELDRY - VERSION 1.0.0</div>
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- VOID MODAL -->
+<div class="modal" id="M_VOID">
+  <div class="mbox">
+    <div class="mtitle"><i class="fa-solid fa-shield-exclamation" style="color:var(--amber)"></i> طلب Void — إلغاء تسجيل حضور</div>
+    <div class="Flbl">رقم الطالب (UID)</div>
+    <input id="VD_UID" class="F" placeholder="BS-2026-0001" oninput="previewVoid()">
+    <div id="VD_PREV" style="display:none;background:var(--amberg);border:1px solid var(--amberb);border-radius:var(--r2);padding:10px;margin:9px 0">
+      <div style="font-weight:700;font-size:12px" id="VD_NAME">—</div>
+      <div style="font-size:11px;color:var(--t2)" id="VD_BAL">—</div>
+    </div>
+    <div class="Flbl" style="margin-top:10px">سبب طلب Void</div>
+    <textarea id="VD_RSN" class="F" rows="3" placeholder="اكتب سبب طلب الإلغاء..."></textarea>
+    <div id="VD_NOTE" style="font-size:11px;color:var(--amber);margin-top:8px;display:none"><i class="fa-solid fa-circle-info"></i> ملاحظة: الطالب لديه طلب Void اليوم بالفعل</div>
+    <div class="mact">
+      <button class="btn btn-gh btn-sm" onclick="cM('M_VOID')">إلغاء</button>
+      <button class="btn btn-a btn-sm" onclick="submitVoid()"><i class="fa-solid fa-paper-plane"></i> إرسال الطلب</button>
+    </div>
+  </div>
+</div>
+
+<!-- NOTES MODAL -->
+<div class="modal" id="M_NOTES">
+  <div class="mbox">
+    <div class="mtitle"><i class="fa-solid fa-pen-to-square" style="color:var(--blue2)"></i> ملاحظات الجلسة</div>
+    <textarea id="NOTES_TXT" class="F" rows="5" placeholder="سجل أي ملاحظات عن الجلسة، مشاكل، غيابات، أعطال..."></textarea>
+    <div class="mact">
+      <button class="btn btn-gh btn-sm" onclick="cM('M_NOTES')">إغلاق</button>
+      <button class="btn btn-p btn-sm" onclick="saveNotes()"><i class="fa-solid fa-floppy-disk"></i> حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEW MODAL -->
+<div class="modal" id="M_REVIEW">
+  <div class="mbox" style="max-width:560px">
+    <div class="mtitle"><i class="fa-solid fa-clipboard-check" style="color:var(--teal)"></i> مراجعة الجلسة قبل الإغلاق</div>
+    <div class="g2" style="margin-bottom:14px">
+      <div style="background:var(--tealg);border:1px solid var(--tealb);border-radius:var(--r2);padding:12px;text-align:center">
+        <div style="font-size:28px;font-weight:900;color:var(--teal)" id="REV_PR">0</div>
+        <div style="font-size:11px;color:var(--t2)">حضور</div>
+      </div>
+      <div style="background:var(--redg);border:1px solid var(--redb);border-radius:var(--r2);padding:12px;text-align:center">
+        <div style="font-size:28px;font-weight:900;color:var(--red)" id="REV_AB">0</div>
+        <div style="font-size:11px;color:var(--t2)">غياب</div>
+      </div>
+    </div>
+    <!-- LOW BALANCE -->
+    <div id="REV_LOW" style="margin-bottom:12px"></div>
+    <!-- ABSENT LIST -->
+    <div style="margin-bottom:14px">
+      <div style="font-size:12px;font-weight:800;color:var(--t2);margin-bottom:8px"><i class="fa-solid fa-user-xmark" style="color:var(--red)"></i> الطلاب الغائبون</div>
+      <div id="REV_ABS_LIST" style="max-height:160px;overflow-y:auto"></div>
+    </div>
+    <div style="background:var(--amberg);border:1px solid var(--amberb);border-radius:var(--r2);padding:10px;font-size:11px;color:#FDE68A;margin-bottom:14px">
+      <i class="fa-solid fa-circle-info"></i>
+      سيتم إرسال رسائل واتساب لأولياء أمور الطلاب الغائبين تلقائياً عند الإغلاق.
+      <strong>لا يمكن إغلاق الجلسة حتى يتم الإرسال.</strong>
+    </div>
+    <div class="mact">
+      <button class="btn btn-gh btn-sm" onclick="cM('M_REVIEW')">رجوع</button>
+      <button class="btn btn-a btn-sm" onclick="sendAbsentWA()"><i class="fa-brands fa-whatsapp"></i> إرسال رسائل الغياب</button>
+      <button class="btn btn-r btn-sm" id="LOCK_BTN" onclick="lockSession()" disabled style="opacity:.5;cursor:not-allowed"><i class="fa-solid fa-lock"></i> تقفيل الجلسة</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOCK SUCCESS MODAL -->
+<div class="modal" id="M_LOCK_OK">
+  <div class="mbox" style="max-width:420px;text-align:center">
+    <div class="confirm-icon" style="background:var(--tealg);color:var(--teal);border:1px solid var(--tealb)"><i class="fa-solid fa-lock"></i></div>
+    <div style="font-size:18px;font-weight:900;margin-bottom:8px">تم تقفيل الجلسة بنجاح</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:16px">
+      يرجى إرسال ملفات الحضور والغياب<br>إلى جروب الإدارة.<br><strong style="color:var(--teal)">شكراً لك ❤️</strong>
+    </div>
+    <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-t btn-sm" id="DL_EXCEL_BTN"><i class="fa-solid fa-file-excel"></i> تحميل ملف الحضور والغياب</button>
+      <button class="btn btn-gh btn-sm" onclick="finishLock()"><i class="fa-solid fa-check"></i> إنهاء</button>
+    </div>
+  </div>
+</div>
 
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAMBxp98hk1C9K7sEF8et0JpwzLWjTPZ_4",
-    authDomain: "omnia-store-7c8e4.firebaseapp.com",
-    databaseURL: "https://omnia-store-7c8e4-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "omnia-store-7c8e4",
-    storageBucket: "omnia-store-7c8e4.firebasestorage.app",
-    messagingSenderId: "840762940236",
-    appId: "1:840762940236:web:b5ea870c11e475e9ab8de9"
-  };
-  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+// ═══════════════ FIREBASE ═══════════════
+const FC={apiKey:"AIzaSyAMBxp98hk1C9K7sEF8et0JpwzLWjTPZ_4",authDomain:"omnia-store-7c8e4.firebaseapp.com",databaseURL:"https://omnia-store-7c8e4-default-rtdb.europe-west1.firebasedatabase.app",projectId:"omnia-store-7c8e4",storageBucket:"omnia-store-7c8e4.firebasestorage.app",messagingSenderId:"840762940236",appId:"1:840762940236:web:b5ea870c11e475e9ab8de9"};
+if(!firebase.apps.length)firebase.initializeApp(FC);
+const db=firebase.database();
+const TSP=firebase.database.ServerValue.TIMESTAMP;
 
-  let currentAssistant = null;
-  let currentGroup = null;
-  let currentSessionKey = null;
-  let html5QrCode = null;
+// ═══════════════ STATE ═══════════════
+let ASS=null; // current assistant
+let GROUPS=[]; // all groups
+let CG=null;  // current active group session context {group, sessionKey, sessionData}
+let SCANNER=null;
+let TIMER_INT=null;
+let SESSION_START=null;
+let WA_SENT=false; // track if WA was sent before lock
 
-  function showToast(msg, isError = false) {
-    let toast = document.createElement('div');
-    toast.innerText = msg;
-    toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
-    toast.style.left = '20px';
-    toast.style.backgroundColor = isError ? '#FF5A5A' : '#19C37D';
-    toast.style.color = 'white';
-    toast.style.padding = '12px 20px';
-    toast.style.borderRadius = '12px';
-    toast.style.zIndex = '9999';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
+// ═══════════════ SPLASH ═══════════════
+setTimeout(()=>document.getElementById('SP').classList.add('out'),1900);
+
+// ═══════════════ UTILS ═══════════════
+function el(id){return document.getElementById(id);}
+function toast(msg,type='ok'){
+  const tc=el('TC');
+  const ic={ok:'fa-circle-check',err:'fa-circle-xmark',warn:'fa-triangle-exclamation',info:'fa-circle-info'};
+  const t=document.createElement('div');t.className=`toast ${type}`;
+  t.innerHTML=`<i class="fa-solid ${ic[type]||ic.ok}"></i><span>${msg}</span>`;
+  tc.appendChild(t);
+  setTimeout(()=>{t.style.transition='.3s';t.style.opacity='0';t.style.transform='translateX(-14px)';setTimeout(()=>t.remove(),320)},3200);
+}
+function oM(id){el(id).classList.add('open');}
+function cM(id){el(id).classList.remove('open');}
+window.addEventListener('click',e=>{if(e.target.classList.contains('modal'))e.target.classList.remove('open');});
+function setPhase(n){for(let i=0;i<4;i++){const ph=el('PH'+i);ph.classList.remove('active','done');if(i<n)ph.classList.add('done');else if(i===n)ph.classList.add('active');}}
+
+// ═══════════════ NETWORK ═══════════════
+function updateNet(online){
+  const nb=el('netbar');
+  if(!online){nb.className='offline';nb.innerHTML='<i class="fa-solid fa-wifi-slash"></i> لا يوجد اتصال بالإنترنت — سيتم المزامنة عند العودة';}
+  else{nb.className='online';nb.innerHTML='<i class="fa-solid fa-wifi"></i> تم استعادة الاتصال';setTimeout(()=>nb.className='',3000);}
+}
+window.addEventListener('online',()=>updateNet(true));
+window.addEventListener('offline',()=>updateNet(false));
+
+// ═══════════════ LOGIN ═══════════════
+setTimeout(()=>{
+  const saved=sessionStorage.getItem('asst_data');
+  if(saved){ASS=JSON.parse(saved);startApp();}
+  else{el('LG').classList.add('show');}
+},2100);
+
+el('LPASS').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+async function doLogin(){
+  const code=el('LPASS').value.trim();
+  if(!code){toast('أدخل الكود','err');return;}
+  const snap=await db.ref('app_configurations/assistants').once('value');
+  const all=snap.val()||{};
+  const entry=Object.entries(all).find(([,a])=>a.code===code);
+  if(entry){
+    ASS={id:entry[0],...entry[1]};
+    sessionStorage.setItem('asst_data',JSON.stringify(ASS));
+    el('LG').classList.remove('show');
+    startApp();
+  }else{
+    const e=el('LERR');e.style.display='block';el('LPASS').value='';
+    setTimeout(()=>e.style.display='none',2500);
   }
+}
+function doLogout(){
+  if(CG&&CG.sessionKey){if(!confirm('لديك جلسة مفتوحة، هل تريد الخروج؟'))return;}
+  if(SCANNER)try{SCANNER.stop();}catch(e){}
+  clearInterval(TIMER_INT);
+  sessionStorage.removeItem('asst_data');
+  location.reload();
+}
 
-  document.getElementById('assistantLoginBtn').onclick = async () => {
-    let code = document.getElementById('assistantCode').value;
-    let assRef = await db.ref('app_configurations/assistants').once('value');
-    let assistants = assRef.val() || {};
-    let found = null;
-    for (let [id, as] of Object.entries(assistants)) {
-      if (as.code === code) { found = { id, ...as }; break; }
-    }
-    if (found) {
-      currentAssistant = found;
-      sessionStorage.setItem('assistant', JSON.stringify(found));
-      document.getElementById('loginSection').style.display = 'none';
-      document.getElementById('dashboardSection').style.display = 'block';
-      await loadGroupData(found.group_reference);
-      checkCurrentSession();
-    } else {
-      let err = document.getElementById('loginError');
-      err.innerText = '❌ كود غير صحيح';
-      err.style.display = 'block';
-      setTimeout(() => err.style.display = 'none', 2000);
-    }
-  };
+// ═══════════════ START APP ═══════════════
+async function startApp(){
+  el('MAIN').classList.add('show');
+  el('TB_NAME').textContent=ASS.name||'المساعد';
+  // Load all groups this assistant is assigned to
+  const snap=await db.ref('app_configurations/groups').once('value');
+  const allGroups=snap.val()||{};
+  // Find groups where this assistant is assigned
+  GROUPS=Object.entries(allGroups)
+    .filter(([,g])=>g.assistant_id===ASS.id)
+    .map(([id,g])=>({id,...g}));
+  if(!GROUPS.length){toast('لم يتم تعيينك في أي مجموعة، تواصل مع المدير','warn');return;}
+  // Show today's sessions
+  renderTodaySessions();
+}
 
-  async function loadGroupData(groupId) {
-    let groupSnap = await db.ref(`app_configurations/groups/${groupId}`).once('value');
-    currentGroup = groupSnap.val() ? { id: groupId, ...groupSnap.val() } : null;
-    document.getElementById('groupName').innerText = currentGroup?.title || 'غير محدد';
+// ═══════════════ TODAY SESSIONS ═══════════════
+function getTodayName(){
+  const days=['أحد','إثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'];
+  return days[new Date().getDay()];
+}
+async function renderTodaySessions(){
+  const today=getTodayName();
+  const todayGroups=GROUPS.filter(g=>g.day===today);
+  const el2=el('TODAY_SESSIONS');
+  if(!todayGroups.length){
+    el2.style.display='block';
+    el2.innerHTML=`<div class="card" style="text-align:center;padding:24px"><div style="font-size:13px;color:var(--t2)"><i class="fa-solid fa-calendar-xmark" style="font-size:24px;opacity:.3;display:block;margin-bottom:10px"></i>لا توجد حصص مجدولة لك اليوم (${today})</div></div>`;
+    return;
   }
-
-  async function checkCurrentSession() {
-    let sessionsSnap = await db.ref('attendance_sessions').once('value');
-    let sessions = sessionsSnap.val() || {};
-    for (let [key, sess] of Object.entries(sessions)) {
-      if (sess.assistantId === currentAssistant.id && sess.is_open === true) {
-        currentSessionKey = key;
-        document.getElementById('sessionStatus').innerHTML = '<span class="badge badge-green">جلسة مفتوحة</span>';
-        loadAttendedStudents();
-        loadSessionNotes();
-        return;
-      }
-    }
-    currentSessionKey = null;
-    document.getElementById('sessionStatus').innerHTML = '<span class="badge badge-red">لا توجد جلسة مفتوحة</span>';
-    document.getElementById('attendedStudentsList').innerHTML = '<p>لا يوجد حضور بعد</p>';
+  // Check for open session for this assistant
+  const sessSnap=await db.ref('attendance_sessions').once('value');
+  const allSess=sessSnap.val()||{};
+  const openSess=Object.entries(allSess).find(([,s])=>s.assistantId===ASS.id&&s.is_open);
+  if(openSess){
+    // Resume session
+    const [sk,sd]=openSess;
+    const group=GROUPS.find(g=>g.id===sd.groupId);
+    CG={group:group||{id:sd.groupId,title:sd.groupTitle},sessionKey:sk,sessionData:sd};
+    SESSION_START=sd.startTime||Date.now();
+    showActiveSession();
+    return;
   }
+  // Show group selector for today
+  el2.style.display='block';
+  const centersSnap=await db.ref('app_configurations/centers').once('value');
+  const centers=centersSnap.val()||{};
+  el2.innerHTML=`<div class="card">
+    <div class="chd"><i class="fa-solid fa-calendar-day" style="color:var(--blue2)"></i><span class="cht">حصصك اليوم — ${today}</span></div>
+    ${todayGroups.map(g=>`<div style="background:var(--s3);border:1px solid var(--bd);border-radius:var(--r2);padding:13px 15px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px">
+      <div><div style="font-weight:800;font-size:13px">${g.title}</div>
+      <div style="font-size:11px;color:var(--t2);margin-top:3px">${g.subject||'—'} • ${g.stage||'—'} • ${g.time||'—'}</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:2px">السنتر: ${centers[g.center_id]?.name||'—'}</div></div>
+      <button class="btn btn-t" onclick="selectGroup('${g.id}')"><i class="fa-solid fa-play"></i> فتح هذه الحصة</button>
+    </div>`).join('')}
+  </div>`;
+}
 
-  document.getElementById('startSessionBtn').onclick = async () => {
-    if (!currentAssistant || !currentGroup) return;
-    if (currentSessionKey) { showToast('يوجد جلسة مفتوحة بالفعل', true); return; }
-    let newSessionRef = db.ref('attendance_sessions').push();
-    currentSessionKey = newSessionRef.key;
-    await newSessionRef.set({
-      assistantId: currentAssistant.id,
-      assistantName: currentAssistant.name,
-      groupId: currentGroup.id,
-      groupTitle: currentGroup.title,
-      is_open: true,
-      startTime: firebase.database.ServerValue.TIMESTAMP,
-      attended: {},
-      notes: ''
+async function selectGroup(gid){
+  const group=GROUPS.find(g=>g.id===gid);
+  if(!group)return;
+  CG={group};
+  // Load group info
+  const centersSnap=await db.ref('app_configurations/centers').once('value');
+  const centers=centersSnap.val()||{};
+  el('GRP_NAME').textContent=group.title;
+  el('GRP_META').textContent=`${group.subject||'—'} • ${group.stage||'—'}`;
+  el('GRP_CENTER').textContent=centers[group.center_id]?.name||'—';
+  el('GRP_TIME').textContent=`${group.day||'—'} • ${group.time||'—'}`;
+  el('TODAY_SESSIONS').style.display='none';
+  el('INFO_CARD').style.display='block';
+  el('NO_SESS').style.display='block';
+  el('SESS_ACTIVE').style.display='none';
+  setPhase(0);
+}
+
+// ═══════════════ START SESSION ═══════════════
+async function startSession(){
+  if(!CG?.group){toast('اختر مجموعة أولاً','err');return;}
+  const g=CG.group;
+  const today=new Date().toISOString().slice(0,10);
+  // Check if session already exists today for this group
+  const snap=await db.ref('attendance_sessions').orderByChild('groupId').equalTo(g.id).once('value');
+  const existing=snap.val()||{};
+  const todaySess=Object.entries(existing).find(([,s])=>s.startTime&&new Date(s.startTime).toISOString().slice(0,10)===today&&!s.is_open===false);
+  if(todaySess&&todaySess[1].is_open){toast('يوجد جلسة مفتوحة بالفعل لهذه المجموعة','warn');return;}
+  const ref=db.ref('attendance_sessions').push();
+  const startTime=Date.now();
+  await ref.set({assistantId:ASS.id,assistantName:ASS.name,groupId:g.id,groupTitle:g.title,is_open:true,startTime,attended:{},notes:''});
+  CG.sessionKey=ref.key;SESSION_START=startTime;WA_SENT=false;
+  // Load full session data
+  const sd=await db.ref(`attendance_sessions/${ref.key}`).once('value');
+  CG.sessionData=sd.val();
+  await db.ref('notifications').push({type:'session',message:`بدأ ${ASS.name} جلسة: ${g.title}`,timestamp:Date.now()});
+  await db.ref('system_operations_logs').push({type:'session_open',message:`فتح جلسة: ${g.title} — المساعد: ${ASS.name}`,timestamp:Date.now()});
+  toast(`تم فتح جلسة: ${g.title}`,'ok');
+  showActiveSession();
+}
+
+function showActiveSession(){
+  const g=CG.group;
+  // Load group UI if not set
+  db.ref('app_configurations/groups/'+g.id).once('value',snap=>{
+    const gd=snap.val()||{};
+    el('GRP_NAME').textContent=g.title;
+    el('GRP_META').textContent=`${gd.subject||g.subject||'—'} • ${gd.stage||g.stage||'—'}`;
+    db.ref('app_configurations/centers/'+gd.center_id).once('value',cs=>{
+      el('GRP_CENTER').textContent=cs.val()?.name||'—';
     });
-    showToast('تم فتح الجلسة بنجاح');
-    document.getElementById('sessionStatus').innerHTML = '<span class="badge badge-green">جلسة مفتوحة</span>';
-  };
-
-  async function markAttendance(studentUid) {
-    if (!currentSessionKey) { showToast('لا توجد جلسة مفتوحة', true); return false; }
-    let studentSnap = await db.ref(`students_directory/${studentUid}`).once('value');
-    let student = studentSnap.val();
-    if (!student) { showToast('الطالب غير موجود', true); return false; }
-    if (student.wallet_balance <= 0) { showToast('الرصيد غير كافٍ', true); return false; }
-    let attendedRef = db.ref(`attendance_sessions/${currentSessionKey}/attended/${studentUid}`);
-    let already = await attendedRef.once('value');
-    if (already.exists()) { showToast('تم تسجيل هذا الطالب بالفعل', true); return false; }
-    // خصم حصة وتسجيل الحضور
-    let newBalance = student.wallet_balance - 1;
-    await db.ref(`students_directory/${studentUid}/wallet_balance`).set(newBalance);
-    await attendedRef.set({
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-      balanceBefore: student.wallet_balance,
-      name: student.name
-    });
-    // تسجيل في attendance_ledger للتقارير
-    let today = new Date().toISOString().slice(0,10);
-    await db.ref(`attendance_ledger/${currentGroup.id}/${today}/${studentUid}`).set({ name: student.name, time: new Date().toISOString() });
-    showToast(`✅ تم تسجيل حضور ${student.name}`);
-    loadAttendedStudents();
-    return true;
-  }
-
-  async function loadAttendedStudents() {
-    if (!currentSessionKey) return;
-    let attendedSnap = await db.ref(`attendance_sessions/${currentSessionKey}/attended`).once('value');
-    let attended = attendedSnap.val() || {};
-    let container = document.getElementById('attendedStudentsList');
-    if (Object.keys(attended).length === 0) { container.innerHTML = '<p>لا يوجد حضور بعد</p>'; return; }
-    let html = '';
-    for (let [uid, data] of Object.entries(attended)) {
-      html += `<div class="attended-item"><i class="fa-solid fa-user-check"></i> ${data.name || uid} - الساعة: ${new Date(data.timestamp).toLocaleTimeString()}</div>`;
-    }
-    container.innerHTML = html;
-  }
-
-  async function loadSessionNotes() {
-    if (!currentSessionKey) return;
-    let notesSnap = await db.ref(`attendance_sessions/${currentSessionKey}/notes`).once('value');
-    document.getElementById('sessionNotes').value = notesSnap.val() || '';
-  }
-  document.getElementById('saveNotesBtn').onclick = async () => {
-    if (!currentSessionKey) return;
-    let notes = document.getElementById('sessionNotes').value;
-    await db.ref(`attendance_sessions/${currentSessionKey}/notes`).set(notes);
-    showToast('تم حفظ الملاحظات');
-  };
-
-  // QR Scanner
-  document.getElementById('scanQrBtn').onclick = () => {
-    document.getElementById('qrScanner').style.display = 'block';
-    if (html5QrCode) html5QrCode.stop().catch(e=>console.log);
-    html5QrCode = new Html5Qrcode("reader");
-    html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, async (decodedText) => {
-      await markAttendance(decodedText);
-      html5QrCode.stop();
-      document.getElementById('qrScanner').style.display = 'none';
-    }, (err) => { console.warn(err); });
-  };
-  document.getElementById('stopScanner')?.addEventListener('click', () => {
-    if (html5QrCode) html5QrCode.stop();
-    document.getElementById('qrScanner').style.display = 'none';
+    el('GRP_TIME').textContent=`${gd.day||g.day||'—'} • ${gd.time||g.time||'—'}`;
   });
+  el('INFO_CARD').style.display='block';
+  el('NO_SESS').style.display='none';
+  el('SESS_ACTIVE').style.display='block';
+  el('ATT_SECTION').style.display='block';
+  el('CLOSE_WRAP').style.display='block';
+  el('TODAY_SESSIONS').style.display='none';
+  setPhase(1);
+  startTimer();
+  loadAttended();
+  // Realtime attended listener
+  db.ref(`attendance_sessions/${CG.sessionKey}/attended`).on('value',()=>{loadAttended();});
+}
 
-  document.getElementById('manualEntryBtn').onclick = () => { document.getElementById('manualInput').style.display = 'block'; };
-  document.getElementById('submitManual').onclick = async () => {
-    let uid = document.getElementById('manualUid').value.trim();
-    if (uid) await markAttendance(uid);
-    document.getElementById('manualUid').value = '';
-  };
+// ═══════════════ TIMER ═══════════════
+function startTimer(){
+  clearInterval(TIMER_INT);
+  TIMER_INT=setInterval(()=>{
+    const diff=Date.now()-(SESSION_START||Date.now());
+    const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+    el('TIMER').textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  },1000);
+}
 
-  document.getElementById('voidRequestBtn').onclick = async () => {
-    let studentUid = prompt('أدخل UID الطالب لطلب Void:');
-    let reason = prompt('سبب الطلب:');
-    if (studentUid && reason) {
-      let studentSnap = await db.ref(`students_directory/${studentUid}`).once('value');
-      if (!studentSnap.exists()) { showToast('الطالب غير موجود', true); return; }
-      await db.ref('void_requests').push({
-        student_uid: studentUid,
-        student_name: studentSnap.val().name,
-        assistant_id: currentAssistant.id,
-        assistant_name: currentAssistant.name,
-        reason: reason,
-        date: new Date().toISOString().slice(0,10),
-        status: 'pending'
-      });
-      showToast('تم إرسال طلب Void إلى الإدارة');
-    }
-  };
+// ═══════════════ ATTENDANCE ═══════════════
+async function markAttendance(uid){
+  if(!CG?.sessionKey){toast('لا توجد جلسة مفتوحة','err');return false;}
+  uid=uid.trim();
+  // Find student by UID
+  const snap=await db.ref('students_directory').once('value');
+  const all=snap.val()||{};
+  const entry=Object.entries(all).find(([,s])=>s.uid===uid);
+  if(!entry){toast('❌ الطالب غير موجود','err');vibrate([200,50,200]);return false;}
+  const[fid,student]=entry;
+  if(student.group_reference!==CG.group.id){toast(`❌ ${student.name} ليس في هذه المجموعة`,'err');return false;}
+  if((student.wallet_balance||0)<=0){toast(`⚠️ رصيد ${student.name} غير كافٍ`,'warn');vibrate([100,50,100,50,100]);return false;}
+  // Check duplicate
+  const attSnap=await db.ref(`attendance_sessions/${CG.sessionKey}/attended/${fid}`).once('value');
+  if(attSnap.exists()){toast(`⚠️ تم تسجيل ${student.name} بالفعل`,'warn');vibrate([100,30,100]);return false;}
+  // Deduct balance + mark attendance using transaction
+  await db.ref(`students_directory/${fid}/wallet_balance`).transaction(b=>Math.max(0,(b||0)-1));
+  await db.ref(`attendance_sessions/${CG.sessionKey}/attended/${fid}`).set({name:student.name,timestamp:Date.now(),balanceBefore:student.wallet_balance});
+  // Ledger
+  const today=new Date().toISOString().slice(0,10);
+  await db.ref(`attendance_ledger/${CG.group.id}/${today}/${fid}`).set({name:student.name,time:Date.now()});
+  toast(`✅ ${student.name}`,'ok');vibrate([50]);
+  playBeep(true);
+  return true;
+}
+function vibrate(pat){if(navigator.vibrate)navigator.vibrate(pat);}
+function playBeep(ok){try{const ac=new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator();const g=ac.createGain();o.connect(g);g.connect(ac.destination);o.frequency.value=ok?880:220;g.gain.setValueAtTime(.3,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.3);o.start(ac.currentTime);o.stop(ac.currentTime+.3);}catch(e){}}
 
-  document.getElementById('closeSessionBtn').onclick = async () => {
-    if (!currentSessionKey) { showToast('لا توجد جلسة مفتوحة', true); return; }
-    // مراجعة الجلسة
-    let attendedSnap = await db.ref(`attendance_sessions/${currentSessionKey}/attended`).once('value');
-    let attended = attendedSnap.val() || {};
-    let groupStudentsSnap = await db.ref('students_directory').once('value');
-    let allStudents = groupStudentsSnap.val() || {};
-    let presentList = [], absentList = [];
-    for (let [uid, stu] of Object.entries(allStudents)) {
-      if (stu.group_reference === currentGroup.id) {
-        if (attended[uid]) presentList.push(stu.name);
-        else absentList.push(stu.name);
-      }
-    }
-    // إنشاء ملفات Excel
-    let wsPresent = XLSX.utils.json_to_sheet(presentList.map(n=>({ 'اسم الطالب': n })));
-    let wsAbsent = XLSX.utils.json_to_sheet(absentList.map(n=>({ 'اسم الطالب': n })));
-    let wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, wsPresent, 'الحضور');
-    XLSX.utils.book_append_sheet(wb, wsAbsent, 'الغياب');
-    XLSX.writeFile(wb, `جلسة_${currentGroup.title}_${new Date().toISOString().slice(0,10)}.xlsx`);
-    // إغلاق الجلسة
-    await db.ref(`attendance_sessions/${currentSessionKey}`).update({ is_open: false, endTime: firebase.database.ServerValue.TIMESTAMP });
-    currentSessionKey = null;
-    document.getElementById('sessionStatus').innerHTML = '<span class="badge badge-red">لا توجد جلسة مفتوحة</span>';
-    document.getElementById('attendedStudentsList').innerHTML = '<p>تم تقفيل الجلسة</p>';
-    showToast('تم تقفيل الجلسة بنجاح، تم تحميل ملفي الحضور والغياب');
-  };
+async function loadAttended(){
+  if(!CG?.sessionKey)return;
+  const snap=await db.ref(`attendance_sessions/${CG.sessionKey}/attended`).once('value');
+  const att=snap.val()||{};
+  const list=el('ATT_LIST');
+  const cnt=Object.keys(att).length;
+  el('ATT_CNT_LBL').textContent=cnt;
+  el('PRES_CNT').textContent=`${cnt} حضور`;
+  // Calc absent
+  const allSnap=await db.ref('students_directory').once('value');
+  const all=allSnap.val()||{};
+  const grpStudents=Object.entries(all).filter(([,s])=>s.group_reference===CG.group.id);
+  const absent=grpStudents.length-cnt;
+  el('ABS_CNT').textContent=`${Math.max(0,absent)} غياب`;
+  if(!cnt){list.innerHTML='<div class="empty"><i class="fa-solid fa-qrcode"></i><p>لم يتم تسجيل أي حضور بعد</p></div>';return;}
+  list.innerHTML=Object.values(att).map((a,i)=>`<div class="att-item"><div class="att-num">${i+1}</div><div class="att-name">${a.name||'—'}</div><div class="att-time">${a.timestamp?new Date(a.timestamp).toLocaleTimeString('ar-EG'):''}</div></div>`).join('');
+}
 
-  document.getElementById('logoutBtn').onclick = () => { sessionStorage.clear(); location.reload(); };
+// ═══════════════ QR SCANNER ═══════════════
+let scannerRunning=false;
+function toggleScanner(){
+  if(scannerRunning){stopScanner();return;}
+  el('QR_WRAP').style.display='block';
+  SCANNER=new Html5Qrcode('QR_READER');
+  const config={fps:12,qrbox:{width:220,height:220},rememberLastUsedCamera:true};
+  SCANNER.start({facingMode:'environment'},config,
+    async(text)=>{
+      const ok=await markAttendance(text);
+      if(ok){stopScanner();}
+    },
+    ()=>{}
+  ).then(()=>{scannerRunning=true;el('SCAN_BTN').innerHTML='<i class="fa-solid fa-stop"></i> إيقاف الكاميرا';}).catch(err=>{toast('تعذر فتح الكاميرا: '+err,'err');el('QR_WRAP').style.display='none';});
+}
+function stopScanner(){
+  if(SCANNER&&scannerRunning){
+    SCANNER.stop().then(()=>{SCANNER=null;scannerRunning=false;el('QR_WRAP').style.display='none';el('SCAN_BTN').innerHTML='<i class="fa-solid fa-camera"></i> مسح QR';}).catch(()=>{});
+  }else{el('QR_WRAP').style.display='none';}
+}
 
-  if (sessionStorage.getItem('assistant')) {
-    let saved = JSON.parse(sessionStorage.getItem('assistant'));
-    currentAssistant = saved;
-    document.getElementById('loginSection').style.display = 'none';
-    document.getElementById('dashboardSection').style.display = 'block';
-    loadGroupData(saved.group_reference).then(() => checkCurrentSession());
-  }
+// ═══════════════ MANUAL ═══════════════
+function toggleManual(){el('MAN_WRAP').style.display=el('MAN_WRAP').style.display==='none'?'block':'none';}
+async function doManual(){
+  const uid=el('MAN_UID').value.trim();
+  if(!uid)return;
+  const fbEl=el('MAN_FB');fbEl.textContent='⏳ جاري التحقق...';fbEl.style.color='var(--t2)';
+  const ok=await markAttendance(uid);
+  if(ok){fbEl.textContent='✅ تم التسجيل';fbEl.style.color='var(--teal)';el('MAN_UID').value='';}
+  else{fbEl.textContent='❌ تعذر التسجيل';fbEl.style.color='var(--red)';}
+  setTimeout(()=>fbEl.textContent='',2500);
+}
+
+// ═══════════════ VOID ═══════════════
+function openVoidModal(){if(!CG?.sessionKey){toast('لا توجد جلسة مفتوحة','err');return;}oM('M_VOID');}
+async function previewVoid(){
+  const uid=el('VD_UID').value.trim();
+  const snap=await db.ref('students_directory').once('value');
+  const all=snap.val()||{};
+  const entry=Object.entries(all).find(([,s])=>s.uid===uid);
+  const prev=el('VD_PREV');const note=el('VD_NOTE');
+  if(entry){
+    const s=entry[1];
+    el('VD_NAME').textContent=s.name;el('VD_BAL').textContent=`الرصيد الحالي: ${s.wallet_balance||0} حصة`;
+    prev.style.display='block';
+    // Check if void already today
+    const today=new Date().toISOString().slice(0,10);
+    const vSnap=await db.ref('void_requests').orderByChild('student_uid').equalTo(uid).once('value');
+    const voids=vSnap.val()||{};
+    const todayVoid=Object.values(voids).some(v=>v.date===today&&v.status==='pending');
+    note.style.display=todayVoid?'block':'none';
+  }else{prev.style.display='none';note.style.display='none';}
+}
+async function submitVoid(){
+  const uid=el('VD_UID').value.trim();const reason=el('VD_RSN').value.trim();
+  if(!uid){toast('أدخل رقم الطالب','err');return;}
+  if(!reason){toast('اكتب سبب الطلب','err');return;}
+  const snap=await db.ref('students_directory').once('value');
+  const all=snap.val()||{};
+  const entry=Object.entries(all).find(([,s])=>s.uid===uid);
+  if(!entry){toast('الطالب غير موجود','err');return;}
+  const today=new Date().toISOString().slice(0,10);
+  await db.ref('void_requests').push({student_uid:uid,student_name:entry[1].name,assistant_id:ASS.id,assistant_name:ASS.name,group_title:CG.group.title,session_id:CG.sessionKey,reason,date:today,status:'pending'});
+  await db.ref('notifications').push({type:'void',message:`طلب Void من ${ASS.name}: ${entry[1].name}`,timestamp:Date.now()});
+  toast('تم إرسال طلب Void للإدارة','info');
+  cM('M_VOID');el('VD_UID').value='';el('VD_RSN').value='';el('VD_PREV').style.display='none';
+}
+
+// ═══════════════ NOTES ═══════════════
+async function openNotesModal(){
+  if(!CG?.sessionKey){toast('لا توجد جلسة مفتوحة','err');return;}
+  const snap=await db.ref(`attendance_sessions/${CG.sessionKey}/notes`).once('value');
+  el('NOTES_TXT').value=snap.val()||'';
+  oM('M_NOTES');
+}
+async function saveNotes(){
+  if(!CG?.sessionKey)return;
+  await db.ref(`attendance_sessions/${CG.sessionKey}/notes`).set(el('NOTES_TXT').value);
+  toast('تم حفظ الملاحظات','ok');cM('M_NOTES');
+}
+
+// ═══════════════ REVIEW & CLOSE ═══════════════
+async function openReviewModal(){
+  if(!CG?.sessionKey){toast('لا توجد جلسة مفتوحة','err');return;}
+  setPhase(2);
+  const attSnap=await db.ref(`attendance_sessions/${CG.sessionKey}/attended`).once('value');
+  const att=attSnap.val()||{};
+  const allSnap=await db.ref('students_directory').once('value');
+  const all=allSnap.val()||{};
+  const grpStudents=Object.entries(all).filter(([,s])=>s.group_reference===CG.group.id);
+  const attFids=Object.keys(att);
+  const absList=grpStudents.filter(([fid])=>!attFids.includes(fid));
+  const lowBal=grpStudents.filter(([,s])=>s.wallet_balance<=2);
+  el('REV_PR').textContent=attFids.length;
+  el('REV_AB').textContent=absList.length;
+  // Absent list
+  el('REV_ABS_LIST').innerHTML=absList.length
+    ?absList.map(([,s])=>`<div class="abs-item"><div class="abs-num"><i class="fa-solid fa-xmark"></i></div><div style="font-weight:700;font-size:12px;flex:1">${s.name}</div><span style="font-size:10px;color:var(--t3)">${s.parent_phone||'—'}</span></div>`).join('')
+    :'<div class="empty" style="padding:14px"><p>لا يوجد غائبون ✅</p></div>';
+  // Low balance
+  const lowEl=el('REV_LOW');
+  if(lowBal.length){
+    lowEl.innerHTML=`<div class="low-bal-chip"><i class="fa-solid fa-triangle-exclamation"></i> ${lowBal.length} طالب رصيدهم منخفض: ${lowBal.map(([,s])=>s.name).join('، ')}</div>`;
+  }else lowEl.innerHTML='';
+  // Store absent list for WA
+  window._absList=absList;
+  WA_SENT=absList.length===0;// if no absent, no need to send
+  updateLockBtn();
+  oM('M_REVIEW');
+}
+function updateLockBtn(){
+  const btn=el('LOCK_BTN');
+  if(WA_SENT){btn.removeAttribute('disabled');btn.style.opacity='1';btn.style.cursor='pointer';}
+  else{btn.setAttribute('disabled','');btn.style.opacity='.5';btn.style.cursor='not-allowed';}
+}
+
+async function sendAbsentWA(){
+  const absList=window._absList||[];
+  if(!absList.length){WA_SENT=true;updateLockBtn();toast('لا يوجد غائبون، يمكنك الإغلاق الآن','ok');return;}
+  // Get template from Firebase
+  const tplSnap=await db.ref('app_configurations/absent_template').once('value');
+  const profSnap=await db.ref('app_configurations/professor_identity').once('value');
+  const tpl=tplSnap.val()||`عزيزي ولي أمر الطالب {name}،\nنود إعلامكم بأن الطالب لم يحضر حصة اليوم.\nمع تحيات {teacher}`;
+  const prof=profSnap.val()||'المدرس';
+  // Open WA links
+  absList.forEach(([,s])=>{
+    const msg=encodeURIComponent(tpl.replace(/{name}/g,s.name).replace(/{teacher}/g,prof));
+    const ph=(s.parent_phone||'').replace(/\D/g,'');
+    const iph=ph.startsWith('0')?'2'+ph:ph;
+    if(iph)window.open(`https://wa.me/${iph}?text=${msg}`,'_blank');
+  });
+  WA_SENT=true;updateLockBtn();
+  toast('تم فتح نوافذ واتساب لأولياء الأمور','info');
+}
+
+async function lockSession(){
+  if(!CG?.sessionKey)return;
+  setPhase(3);
+  const attSnap=await db.ref(`attendance_sessions/${CG.sessionKey}/attended`).once('value');
+  const att=attSnap.val()||{};
+  const allSnap=await db.ref('students_directory').once('value');
+  const all=allSnap.val()||{};
+  const grpStudents=Object.entries(all).filter(([,s])=>s.group_reference===CG.group.id);
+  const absList=grpStudents.filter(([fid])=>!Object.keys(att).includes(fid));
+  // Update session
+  await db.ref(`attendance_sessions/${CG.sessionKey}`).update({is_open:false,endTime:Date.now(),absent_count:absList.length});
+  // Log
+  await db.ref('system_operations_logs').push({type:'session_close',message:`تقفيل جلسة: ${CG.group.title} — حضور:${Object.keys(att).length} غياب:${absList.length}`,timestamp:Date.now()});
+  await db.ref('notifications').push({type:'session',message:`تقفيل جلسة ${CG.group.title}`,timestamp:Date.now()});
+  // Store for Excel download
+  window._lockAtt=att;window._lockAbs=absList;window._lockGroup=CG.group;
+  cM('M_REVIEW');clearInterval(TIMER_INT);
+  // Show success modal
+  oM('M_LOCK_OK');
+  el('DL_EXCEL_BTN').onclick=()=>downloadExcel(att,absList,CG.group);
+}
+
+async function downloadExcel(att,abs,group){
+  const title=group.title||'جلسة';
+  const today=new Date().toISOString().slice(0,10);
+  // Sheet 1: Attended
+  const attData=[['#','اسم الطالب','وقت التسجيل']];
+  Object.values(att).forEach((a,i)=>attData.push([i+1,a.name||'—',a.timestamp?new Date(a.timestamp).toLocaleTimeString('ar-EG'):'—']));
+  // Sheet 2: Absent
+  const absData=[['#','اسم الطالب','هاتف ولي الأمر']];
+  abs.forEach(([,s],i)=>absData.push([i+1,s.name||'—',s.parent_phone||'—']));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(attData),'الحضور');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(absData),'الغياب');
+  XLSX.writeFile(wb,`${title}_${today}.xlsx`);
+  toast('تم تحميل ملف الحضور والغياب','ok');
+}
+
+function finishLock(){
+  cM('M_LOCK_OK');
+  // Reset UI
+  CG=null;SESSION_START=null;WA_SENT=false;
+  el('ATT_SECTION').style.display='none';
+  el('CLOSE_WRAP').style.display='none';
+  el('SESS_ACTIVE').style.display='none';
+  el('NO_SESS').style.display='block';
+  el('ATT_LIST').innerHTML='<div class="empty"><i class="fa-solid fa-qrcode"></i><p>لم يتم تسجيل أي حضور بعد</p></div>';
+  el('ATT_CNT_LBL').textContent='0';
+  el('TIMER').textContent='00:00:00';
+  setPhase(0);
+  renderTodaySessions();
+}
 </script>
 </body>
 </html>
