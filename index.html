@@ -385,6 +385,52 @@ textarea.F{resize:vertical;min-height:76px}
   </div>
 </div>
 
+<!-- HOMEWORK MODAL — يظهر عند بدء الجلسة -->
+<div class="modal" id="M_homework">
+  <div class="mbox" style="max-width:560px">
+    <div class="mtitle"><i class="fa-solid fa-clipboard-list" style="color:var(--am)"></i> سجّل الواجب المنزلي</div>
+    <p style="font-size:13px;color:var(--t2);margin-bottom:18px;line-height:1.8">هل أحضر الطلاب واجب الحصة السابقة؟ سجّل الحالة لكل طالب من الطلاب الحاضرين.</p>
+    <div id="hwStudentList" style="max-height:340px;overflow-y:auto"></div>
+    <div style="margin-top:14px">
+      <label class="Fl">رسالة واجب اليوم (تُرسل لمن لم يؤدِ)</label>
+      <textarea id="hwMessage" class="F" rows="3" placeholder="مثال: الطالب لم يحضر الواجب المطلوب (حل الصفحات 20-25)..."></textarea>
+    </div>
+    <div class="mactions">
+      <button class="btn btn-gh btn-sm" onclick="closeM('M_homework')">تخطي</button>
+      <button class="btn btn-a btn-sm" onclick="saveHomework()"><i class="fa-solid fa-floppy-disk"></i> حفظ الواجبات</button>
+    </div>
+  </div>
+</div>
+
+<!-- EXAM MODAL — يظهر بعد مرحلة المراجعة -->
+<div class="modal" id="M_exam">
+  <div class="mbox" style="max-width:580px">
+    <div class="mtitle"><i class="fa-solid fa-file-pen" style="color:var(--vi)"></i> هل يوجد امتحان في حصة اليوم؟</div>
+    <div id="examStep1">
+      <p style="font-size:13.5px;color:var(--t2);margin-bottom:20px;line-height:1.8">إذا كان هناك امتحان اليوم، يمكنك تسجيل درجات الطلاب وسيُرسَل تلقائياً لأولياء الأمور.</p>
+      <div style="display:flex;gap:12px">
+        <button class="btn btn-e" style="flex:1" onclick="confirmExamYes()"><i class="fa-solid fa-check"></i> نعم، يوجد امتحان</button>
+        <button class="btn btn-gh" style="flex:1" onclick="closeM('M_exam');lockSession()"><i class="fa-solid fa-xmark"></i> لا يوجد امتحان</button>
+      </div>
+    </div>
+    <div id="examStep2" style="display:none">
+      <div style="margin-bottom:14px">
+        <label class="Fl">الامتحان من كام درجة؟ *</label>
+        <input id="examMaxScore" class="F" type="number" min="1" max="200" placeholder="مثال: 20" style="max-width:180px">
+      </div>
+      <div style="margin-bottom:14px">
+        <label class="Fl">اسم الامتحان / الموضوع</label>
+        <input id="examTitle" class="F" placeholder="مثال: امتحان الفصل الثالث">
+      </div>
+      <div id="examScoresList" style="max-height:300px;overflow-y:auto;margin-top:10px"></div>
+      <div class="mactions">
+        <button class="btn btn-gh btn-sm" onclick="el('examStep1').style.display='block';el('examStep2').style.display='none'">رجوع</button>
+        <button class="btn btn-v btn-sm" onclick="saveExamScores()"><i class="fa-solid fa-paper-plane"></i> حفظ وإرسال للأولياء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="M_review">
   <div class="mbox" style="max-width:560px">
     <div class="mtitle"><i class="fa-solid fa-clipboard-check" style="color:var(--em2)"></i> مراجعة الجلسة قبل الإغلاق</div>
@@ -401,7 +447,7 @@ textarea.F{resize:vertical;min-height:76px}
     <div class="mactions">
       <button class="btn btn-gh btn-sm" onclick="closeM('M_review')">رجوع</button>
       <button class="btn btn-a btn-sm" onclick="sendAbsentWA()"><i class="fa-brands fa-whatsapp"></i> إرسال رسائل الغياب</button>
-      <button class="btn btn-r btn-sm" id="lockBtn" onclick="lockSession()" disabled style="opacity:.45;cursor:not-allowed"><i class="fa-solid fa-lock"></i> تقفيل الجلسة</button>
+      <button class="btn btn-r btn-sm" id="lockBtn" onclick="openExamModal()" disabled style="opacity:.45;cursor:not-allowed"><i class="fa-solid fa-arrow-left"></i> التالي — إنهاء الجلسة</button>
     </div>
   </div>
 </div>
