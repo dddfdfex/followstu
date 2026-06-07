@@ -41,7 +41,6 @@
   --maxw:430px;
 }
 
-/* ── BASE ── */
 html{height:100%;overflow:hidden}
 body{
   font-family:"Cairo","Tajawal",sans-serif;
@@ -54,7 +53,6 @@ body{
   position:fixed; inset:0;
 }
 
-/* Mobile-only constraint — center everything max 430px */
 #ROOT{
   position:fixed; inset:0;
   display:flex; align-items:stretch; justify-content:center;
@@ -74,19 +72,16 @@ body{
   overflow:hidden;
   background:var(--bg);
 }
-/* Side gutter glow for wide screens */
 @media(min-width:500px){
   #WRAP{border-left:1px solid var(--b1); border-right:1px solid var(--b1);}
 }
 
-/* ── AMBIENT GLOWS ── */
 .amb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0}
 .amb-1{width:320px;height:320px;background:radial-gradient(circle,rgba(16,185,129,.13),transparent 70%);top:-80px;right:-60px;animation:ambF 8s ease-in-out infinite}
 .amb-2{width:260px;height:260px;background:radial-gradient(circle,rgba(99,102,241,.09),transparent 70%);bottom:-60px;left:-50px;animation:ambF 10s ease-in-out 3s infinite}
 .amb-3{width:160px;height:160px;background:radial-gradient(circle,rgba(245,158,11,.06),transparent 70%);top:45%;right:15%;animation:ambF 12s ease-in-out 6s infinite}
 @keyframes ambF{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(12px,-15px) scale(1.06)}66%{transform:translate(-8px,12px) scale(.95)}}
 
-/* ── SCROLLABLE CONTENT ── */
 #SCROLLER{
   flex:1; overflow-y:auto; overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
@@ -204,6 +199,7 @@ body{
 .btn-v{background:linear-gradient(135deg,#6D28D9,var(--vi),#A78BFA);color:#fff;box-shadow:0 4px 14px rgba(139,92,246,.28)}
 .btn-s{background:linear-gradient(135deg,#0369A1,var(--sk),#38BDF8);color:#fff}
 .btn-wa{background:linear-gradient(135deg,#065F46,#128C7E,#25D366);color:#fff;box-shadow:0 4px 14px rgba(18,140,126,.32)}
+.btn-wa-sent{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--t3);box-shadow:none;cursor:default;pointer-events:none;text-decoration:line-through}
 .btn-gold{background:linear-gradient(135deg,#92400E,var(--gd),var(--gd2));color:#0A0600;box-shadow:0 4px 16px rgba(245,158,11,.38);font-weight:900}
 .btn-gh{background:rgba(255,255,255,.04);border:1.5px solid var(--b2);color:var(--t2)}
 .btn-gh:active{background:rgba(255,255,255,.07);color:var(--t1)}
@@ -406,6 +402,24 @@ body{
 
 /* ══ PULSE ══ */
 @keyframes sdP{0%,100%{opacity:1}50%{opacity:.45}}
+
+/* ══ WA ROW INSIDE MODALS ══ */
+.wa-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;
+  background:var(--s3);border:1px solid var(--b1);border-radius:var(--r-md);margin-bottom:6px;
+  gap:9px;
+}
+.wa-row-name{font-family:"Tajawal";font-weight:800;font-size:12.5px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wa-row-phone{font-size:10px;color:var(--t3);font-family:"Poppins";margin-top:2px}
+.wa-row .btn-wa{min-height:34px;padding:6px 12px;font-size:11px;border-radius:var(--r-pill);animation:none}
+.wa-row .btn-wa-sent{min-height:34px;padding:6px 12px;font-size:11px;border-radius:var(--r-pill)}
+
+/* lock progress */
+.lock-progress{margin-bottom:14px}
+.lock-progress-bar{height:6px;background:var(--b1);border-radius:3px;overflow:hidden;margin-top:6px}
+.lock-progress-fill{height:100%;background:linear-gradient(90deg,var(--em),var(--gd));border-radius:3px;transition:width .4s ease}
+.lock-progress-text{font-size:11px;color:var(--t3);text-align:center;margin-top:5px}
 </style>
 </head>
 <body>
@@ -427,7 +441,7 @@ body{
   </div>
   <div class="sp-text">
     <div class="sp-name">BROTHERS STUDIO</div>
-    <div class="sp-tag">Assistant Portal v4.1</div>
+    <div class="sp-tag">Assistant Portal v4.2</div>
     <div class="sp-dots">
       <div class="sp-dot"></div><div class="sp-dot"></div>
       <div class="sp-dot"></div><div class="sp-dot"></div>
@@ -442,9 +456,9 @@ body{
     <div class="wb-glow"></div>
     <div class="wb-logo-inner"><img src="logo.jpg" alt="" onerror="this.style.display='none'"></div>
   </div>
-  <div class="wb-hi">🎉 أهلاً وسهلاً بك يا</div>
+  <div class="wb-hi">أهلاً وسهلاً بك يا</div>
   <div class="wb-name" id="wbName">—</div>
-  <div class="wb-role" id="wbRole">مساعد <span id="wbTeacherName">Brothers Studio</span></div>
+  <div class="wb-role">مساعد <span id="wbTeacherName">Brothers Studio</span></div>
   <div class="wb-div"></div>
   <div class="wb-stars">⭐ ⭐ ⭐</div>
   <div class="wb-bar-wrap"><div class="wb-bar"></div></div>
@@ -577,9 +591,9 @@ body{
           <div class="timer-lbl">مدة الجلسة الحالية</div>
         </div>
         <div class="stats-row">
-          <div class="stat-box"><div class="stat-val" style="color:var(--em2)" id="sbPresent">0</div><div class="stat-lbl">✅ حضور</div></div>
-          <div class="stat-box"><div class="stat-val" style="color:var(--ro2)" id="sbAbsent">0</div><div class="stat-lbl">❌ غياب</div></div>
-          <div class="stat-box"><div class="stat-val" style="color:var(--am2)" id="sbTotal">0</div><div class="stat-lbl">👥 إجمالي</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--em2)" id="sbPresent">0</div><div class="stat-lbl">حضور</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--ro2)" id="sbAbsent">0</div><div class="stat-lbl">غياب</div></div>
+          <div class="stat-box"><div class="stat-val" style="color:var(--am2)" id="sbTotal">0</div><div class="stat-lbl">إجمالي</div></div>
         </div>
       </div>
 
@@ -605,7 +619,6 @@ body{
           <i class="fa-solid fa-circle-info" style="color:var(--sk2)"></i>
           <span>بعد تسجيل كل طالب، حدّد حالة الواجب من القائمة أدناه</span>
         </div>
-        <!-- Scanner -->
         <div id="scannerWrap" style="display:none;margin-bottom:9px">
           <div class="scanner-outer">
             <div id="qr_reader_div"></div>
@@ -622,7 +635,6 @@ body{
             <button class="btn btn-gh btn-sm" onclick="stopScanner()"><i class="fa-solid fa-xmark"></i> إغلاق</button>
           </div>
         </div>
-        <!-- Manual -->
         <div id="manualWrap" style="display:none;margin-bottom:9px">
           <div style="display:flex;gap:7px">
             <input id="manualUID" class="F" placeholder="رقم الطالب (UID)..." style="flex:1" onkeydown="if(event.key==='Enter')doManual()">
@@ -656,14 +668,14 @@ body{
       <div class="card card-am card-accent-am" style="text-align:center;padding:18px 14px">
         <div style="font-size:11.5px;color:var(--t2);margin-bottom:13px;line-height:2">
           <i class="fa-solid fa-circle-info" style="color:var(--am2)"></i>
-          بعد انتهاء الحصة راجع الكشوفات<br>وأرسل رسائل الغياب ثم أقفل الجلسة
+          بعد انتهاء الحصة راجع الكشوفات<br>وأرسل رسائل الغياب عبر زر الواتساب الخاص بكل طالب ثم أقفل الجلسة
         </div>
         <button class="btn btn-gold btn-fw" onclick="openReviewModal()">
           <i class="fa-solid fa-clipboard-check"></i> مراجعة وإنهاء الجلسة
         </button>
       </div>
 
-      <div class="page-footer" id="pageFooter">BROTHERS STUDIO v4.1</div>
+      <div class="page-footer" id="pageFooter">BROTHERS STUDIO v4.2</div>
     </div>
   </div>
 </div><!-- /WRAP -->
@@ -732,11 +744,11 @@ body{
         <div><label class="Fl">الدرجة الكلية *</label><input id="examMaxScore" class="F" type="number" inputmode="decimal" min="1" max="200" placeholder="مثال: 20" oninput="refreshAllPcts()"></div>
         <div><label class="Fl">اسم الامتحان</label><input id="examTitle" class="F" placeholder="مثال: امتحان ف3"></div>
       </div>
-      <div class="info-box info-in" style="margin-bottom:9px"><i class="fa-solid fa-circle-info" style="color:var(--in2)"></i><span>أدخل درجة كل طالب — التقدير يُحسب تلقائياً</span></div>
+      <div class="info-box info-in" style="margin-bottom:9px"><i class="fa-solid fa-circle-info" style="color:var(--in2)"></i><span>أدخل درجة كل طالب — التقدير يُحسب تلقائياً — ثم أرسل لكل ولي أمر</span></div>
       <div id="examScoresList" style="max-height:40dvh;overflow-y:auto;-webkit-overflow-scrolling:touch"></div>
       <div class="m-actions">
         <button class="btn btn-gh btn-sm" onclick="document.getElementById('examStep1').style.display='block';document.getElementById('examStep2').style.display='none'">رجوع</button>
-        <button class="btn btn-v btn-sm" onclick="saveExamScores()"><i class="fa-solid fa-paper-plane"></i> حفظ وإرسال</button>
+        <button class="btn btn-v btn-sm" onclick="saveExamScores()"><i class="fa-solid fa-paper-plane"></i> حفظ وتقفيل</button>
       </div>
     </div>
   </div>
@@ -753,22 +765,31 @@ body{
     <div class="grid-2" style="margin-bottom:13px">
       <div style="background:var(--emg);border:1px solid var(--emb);border-radius:var(--r-lg);padding:13px;text-align:center">
         <div style="font-size:30px;font-weight:900;color:var(--em2);font-family:'Poppins';line-height:1" id="revPresent">0</div>
-        <div style="font-size:11px;color:var(--t2);margin-top:4px">✅ حضور</div>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px">حضور</div>
       </div>
       <div style="background:var(--rog);border:1px solid var(--rob);border-radius:var(--r-lg);padding:13px;text-align:center">
         <div style="font-size:30px;font-weight:900;color:var(--ro2);font-family:'Poppins';line-height:1" id="revAbsent">0</div>
-        <div style="font-size:11px;color:var(--t2);margin-top:4px">❌ غياب</div>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px">غياب</div>
       </div>
     </div>
     <div id="revLowWarn" style="display:none;margin-bottom:10px"></div>
+
+    <!-- الغائبون — زر واتساب لكل طالب -->
     <div style="margin-bottom:12px">
-      <div style="font-size:11.5px;font-weight:800;color:var(--t3);margin-bottom:7px;display:flex;align-items:center;gap:5px"><i class="fa-solid fa-user-xmark" style="color:var(--ro2)"></i> الطلاب الغائبون</div>
-      <div id="revAbsList" style="max-height:30dvh;overflow-y:auto;-webkit-overflow-scrolling:touch"></div>
+      <div style="font-size:11.5px;font-weight:800;color:var(--t3);margin-bottom:7px;display:flex;align-items:center;gap:5px">
+        <i class="fa-solid fa-user-xmark" style="color:var(--ro2)"></i> الطلاب الغائبون — أرسل لكل ولي أمر
+      </div>
+      <!-- progress bar -->
+      <div class="lock-progress" id="absProgress" style="display:none">
+        <div class="lock-progress-bar"><div class="lock-progress-fill" id="absProgressFill" style="width:0%"></div></div>
+        <div class="lock-progress-text" id="absProgressText">0 / 0 تم الإرسال</div>
+      </div>
+      <div id="revAbsList"></div>
     </div>
-    <div class="info-box info-am"><i class="fa-solid fa-circle-info"></i><span>أرسل رسائل الغياب أولاً عبر واتساب قبل الانتقال للخطوة التالية</span></div>
+
+    <div class="info-box info-am"><i class="fa-solid fa-circle-info"></i><span>يجب إرسال رسالة لكل غائب قبل تقفيل الجلسة</span></div>
     <div class="m-actions">
       <button class="btn btn-gh btn-sm" onclick="closeM('M_review')">رجوع</button>
-      <button class="btn btn-wa btn-sm" onclick="sendAbsentWA()"><i class="fa-brands fa-whatsapp"></i> إرسال الغياب</button>
       <button class="btn btn-r btn-sm" id="lockBtn" onclick="openExamModal()" disabled style="opacity:.4;cursor:not-allowed">التالي <i class="fa-solid fa-arrow-left"></i></button>
     </div>
   </div>
@@ -782,16 +803,20 @@ body{
       <i class="fa-solid fa-lock"></i>
     </div>
     <div id="sessLockedNum" style="font-family:'Poppins';font-size:12px;color:var(--in2);font-weight:800;margin-bottom:6px;letter-spacing:.5px"></div>
-    <div style="font-family:'Tajawal';font-size:19px;font-weight:900;margin-bottom:7px;color:var(--t1)">تم تقفيل الجلسة ✅</div>
+    <div style="font-family:'Tajawal';font-size:19px;font-weight:900;margin-bottom:7px;color:var(--t1)">تم تقفيل الجلسة</div>
     <div style="font-size:12px;color:var(--t2);line-height:2;margin-bottom:16px">
       يرجى إرسال ملف الجلسة إلى جروب الإدارة<br>
-      <span style="color:var(--em2);font-weight:800">شكراً جزيلاً لك ❤️</span>
+      <span style="color:var(--em2);font-weight:800">شكراً جزيلاً لك</span>
     </div>
+
+    <!-- الواجب — زر واتساب لكل طالب -->
     <div id="hwLockSection" style="display:none;margin-bottom:14px;text-align:right">
-      <div style="font-size:11.5px;color:var(--t3);margin-bottom:8px;font-weight:700;text-align:center;display:flex;align-items:center;justify-content:center;gap:5px"><i class="fa-solid fa-clipboard-list" style="color:var(--am2)"></i> الطلاب الذين لم يؤدوا الواجب</div>
-      <div id="hwLockList" style="max-height:28dvh;overflow-y:auto;margin-bottom:10px;-webkit-overflow-scrolling:touch"></div>
-      <button class="btn btn-wa btn-fw" onclick="sendHomeworkWA()"><i class="fa-brands fa-whatsapp"></i> إرسال رسائل الواجب لأولياء الأمور</button>
+      <div style="font-size:11.5px;color:var(--t3);margin-bottom:8px;font-weight:700;text-align:center;display:flex;align-items:center;justify-content:center;gap:5px">
+        <i class="fa-solid fa-clipboard-list" style="color:var(--am2)"></i> الطلاب الذين لم يؤدوا الواجب
+      </div>
+      <div id="hwLockList" style="max-height:28dvh;overflow-y:auto;margin-bottom:10px;-webkit-overflow-scrolling:touch;text-align:right"></div>
     </div>
+
     <div style="display:flex;gap:8px;justify-content:center">
       <button class="btn btn-e btn-sm" id="dlExcelBtn"><i class="fa-solid fa-file-excel"></i> تحميل Excel</button>
       <button class="btn btn-gh btn-sm" onclick="finishSession()"><i class="fa-solid fa-check"></i> إنهاء</button>
@@ -801,7 +826,7 @@ body{
 
 <script>
 /* ═══════════════════════════════════════════
-   BROTHERS STUDIO v4.1 — ASSISTANT PORTAL
+   BROTHERS STUDIO v4.2 — ASSISTANT PORTAL
    ═══════════════════════════════════════════ */
 const _FC={apiKey:"AIzaSyD971ixQUVYZxTtjAkl7U8bC-ZbsZgCUX4",authDomain:"brothers-studio-attendance.firebaseapp.com",databaseURL:"https://brothers-studio-attendance-default-rtdb.europe-west1.firebasedatabase.app",projectId:"brothers-studio-attendance",storageBucket:"brothers-studio-attendance.firebasestorage.app",messagingSenderId:"149223396857",appId:"1:149223396857:web:2d8629ef8f76581e35d928"};
 if(!firebase.apps.length)firebase.initializeApp(_FC);
@@ -810,64 +835,33 @@ const db=firebase.database();
 /* ── STATE ── */
 let ASST=null,ALL_GROUPS={},ALL_CENTERS={},ALL_STUDENTS={},CFG={};
 let TODAY_GROUPS=[],CG=null,SESS_KEY=null,SESS_START=null,SESS_NUMBER=null;
-let TIMER_INT=null,SCANNER=null,SCANNER_ON=false,WA_SENT=false,ABS_LIST=[];
+let TIMER_INT=null,SCANNER=null,SCANNER_ON=false,ABS_LIST=[];
 let HW_DATA={},_lastAtt={};
 
+/* ── WA SENT TRACKING ── */
+// waSent['abs'][fid] = true/false
+// waSent['hw'][fid]  = true/false
+// waSent['exam'][fid]= true/false
+let WA_SENT_ABS={}, WA_SENT_HW={}, WA_SENT_EXAM={};
+
 /* ════════════════════════════════
-   🔊 SOUND ENGINE — Cashier Style
+   SOUND ENGINE
    ════════════════════════════════ */
 let _AC=null;
-function getAC(){
-  if(!_AC){try{_AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}
-  if(_AC.state==='suspended')_AC.resume().catch(()=>{});
-  return _AC;
-}
+function getAC(){if(!_AC){try{_AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}}if(_AC.state==='suspended')_AC.resume().catch(()=>{});return _AC;}
 function unlockAudio(){const c=getAC();if(c&&c.state==='suspended')c.resume();}
 document.addEventListener('touchstart',unlockAudio,{once:true,passive:true});
 document.addEventListener('click',unlockAudio,{once:true});
-
-function tone(freq,dur,type='sine',gain=0.28,delay=0){
-  const c=getAC();if(!c)return;
-  const o=c.createOscillator(),g=c.createGain();
-  o.connect(g);g.connect(c.destination);
-  o.type=type;o.frequency.setValueAtTime(freq,c.currentTime+delay);
-  g.gain.setValueAtTime(0,c.currentTime+delay);
-  g.gain.linearRampToValueAtTime(gain,c.currentTime+delay+0.012);
-  g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+delay+dur);
-  o.start(c.currentTime+delay);o.stop(c.currentTime+delay+dur+0.015);
-}
-function noise(dur,gain=0.05,delay=0){
-  const c=getAC();if(!c)return;
-  const buf=c.createBuffer(1,c.sampleRate*dur,c.sampleRate);
-  const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
-  const src=c.createBufferSource();src.buffer=buf;
-  const flt=c.createBiquadFilter();flt.type='bandpass';flt.frequency.value=1400;flt.Q.value=0.9;
-  const g=c.createGain();g.gain.setValueAtTime(gain,c.currentTime+delay);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+delay+dur);
-  src.connect(flt);flt.connect(g);g.connect(c.destination);
-  src.start(c.currentTime+delay);src.stop(c.currentTime+delay+dur+0.015);
-}
-
-/* Named sounds */
+function tone(freq,dur,type='sine',gain=0.28,delay=0){const c=getAC();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=type;o.frequency.setValueAtTime(freq,c.currentTime+delay);g.gain.setValueAtTime(0,c.currentTime+delay);g.gain.linearRampToValueAtTime(gain,c.currentTime+delay+0.012);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+delay+dur);o.start(c.currentTime+delay);o.stop(c.currentTime+delay+dur+0.015);}
+function noise(dur,gain=0.05,delay=0){const c=getAC();if(!c)return;const buf=c.createBuffer(1,c.sampleRate*dur,c.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const src=c.createBufferSource();src.buffer=buf;const flt=c.createBiquadFilter();flt.type='bandpass';flt.frequency.value=1400;flt.Q.value=0.9;const g=c.createGain();g.gain.setValueAtTime(gain,c.currentTime+delay);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+delay+dur);src.connect(flt);flt.connect(g);g.connect(c.destination);src.start(c.currentTime+delay);src.stop(c.currentTime+delay+dur+0.015);}
 function sndLoginOK(){tone(523.25,.1,'sine',.22,0);tone(659.25,.1,'sine',.22,.09);tone(783.99,.18,'sine',.25,.18);tone(1046.5,.26,'sine',.18,.3);}
 function sndLoginErr(){tone(440,.09,'square',.14,0);tone(330,.09,'square',.13,.1);tone(220,.22,'square',.14,.2);}
-// Classic double-beep cashier scan OK
-function sndScanOK(){
-  tone(1900,.055,'sine',.32,0);noise(.038,.07,.01);
-  tone(1900,.055,'sine',.32,.11);noise(.038,.07,.12);
-}
-// Low buzzer on error
-function sndScanErr(){
-  tone(200,.055,'sawtooth',.28,0);tone(175,.055,'sawtooth',.25,.07);tone(155,.18,'sawtooth',.22,.14);
-}
-// Mid-tone warning
+function sndScanOK(){tone(1900,.055,'sine',.32,0);noise(.038,.07,.01);tone(1900,.055,'sine',.32,.11);noise(.038,.07,.12);}
+function sndScanErr(){tone(200,.055,'sawtooth',.28,0);tone(175,.055,'sawtooth',.25,.07);tone(155,.18,'sawtooth',.22,.14);}
 function sndWarn(){tone(880,.045,'sine',.22,0);tone(660,.14,'sine',.18,.07);}
-// Arpeggio up on start
 function sndStart(){[523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(f,.13,'triangle',.2,i*.09));}
-// Arpeggio down on lock
 function sndLock(){[783.99,659.25,523.25,392].forEach((f,i)=>tone(f,.13,'sine',.2,i*.1));}
-// Soft chime notify
 function sndNotify(){tone(659.25,.09,'sine',.18,0);tone(880,.14,'sine',.16,.11);}
-// Subtle click
 function sndClick(){tone(1100,.035,'sine',.12,0);noise(.025,.035,0);}
 
 /* ── HELPERS ── */
@@ -888,14 +882,14 @@ function setPhase(n){for(let i=0;i<5;i++){const p=el('ph'+i);p.classList.remove(
 function vibrate(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
 function flashScanCard(ok){const c=el('scannerCard');if(!c)return;c.classList.remove('flash-ok','flash-err');void c.offsetWidth;c.classList.add(ok?'flash-ok':'flash-err');setTimeout(()=>c.classList.remove('flash-ok','flash-err'),600);}
 
-window.addEventListener('online',()=>{const b=el('netbar');b.className='back';b.textContent='✅ تم استعادة الاتصال';setTimeout(()=>{b.className='';b.style.display='none';},3000);});
-window.addEventListener('offline',()=>{const b=el('netbar');b.className='offline';b.textContent='⚠️ لا يوجد اتصال بالإنترنت';});
+window.addEventListener('online',()=>{const b=el('netbar');b.className='back';b.textContent='تم استعادة الاتصال';setTimeout(()=>{b.className='';b.style.display='none';},3000);});
+window.addEventListener('offline',()=>{const b=el('netbar');b.className='offline';b.textContent='لا يوجد اتصال بالإنترنت';});
 
 function applySystemName(n){
   n=n||'Brothers Studio';
   document.title=`${n} — بوابة المساعد`;
   ['tbSysName','loginTitle','lcTitle','wbTeacherName'].forEach(id=>{const e=el(id);if(e)e.textContent=n;});
-  const f=el('pageFooter');if(f)f.textContent=`${n} v4.1 • ZEYAD ELDERY`;
+  const f=el('pageFooter');if(f)f.textContent=`${n} v4.2`;
 }
 
 function spawnParticles(){
@@ -910,7 +904,6 @@ function showWelcomeBanner(name){
   setTimeout(()=>{b.style.transition='opacity .6s ease';b.style.opacity='0';setTimeout(()=>{b.style.display='none';b.style.opacity='1';},620);},3100);
 }
 
-/* ── SESSION NUMBER DISPLAY ── */
 function showSessNum(num){
   if(!num)return;
   const badge=el('sessNumBadge'),txt=el('sessNumText'),locked=el('sessLockedNum');
@@ -977,7 +970,7 @@ async function initApp(){
     const sessions=oS.val()||{};
     const openEntry=Object.entries(sessions).find(([,s])=>s.is_open);
     if(openEntry){
-      const[sk,sd]=openEntry;SESS_KEY=sk;SESS_START=sd.startTime;WA_SENT=false;
+      const[sk,sd]=openEntry;SESS_KEY=sk;SESS_START=sd.startTime;
       SESS_NUMBER=sd.session_number||null;
       CG={id:sd.groupId,title:sd.groupTitle};
       toast('تم استعادة الجلسة المفتوحة','info');showActiveSection();
@@ -987,7 +980,6 @@ async function initApp(){
 
 function getTodayAr(){return['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][new Date().getDay()];}
 
-/* ── GET NEXT SESSION NUMBER ── */
 async function getNextSessionNumber(){
   const snap=await db.ref('attendance_sessions').once('value');
   const all=snap.val()||{};
@@ -1047,14 +1039,14 @@ async function startSession(){
     const oS=await db.ref('attendance_sessions').orderByChild('assistantId').equalTo(ASST.id).once('value');
     if(Object.values(oS.val()||{}).some(s=>s.is_open)){toast('لديك جلسة مفتوحة بالفعل','warn');sndWarn();return;}
     SESS_NUMBER=await getNextSessionNumber();
-    SESS_START=Date.now();WA_SENT=false;HW_DATA={};_lastAtt={};
+    SESS_START=Date.now();HW_DATA={};_lastAtt={};WA_SENT_ABS={};WA_SENT_HW={};WA_SENT_EXAM={};
     const ref=db.ref('attendance_sessions').push();SESS_KEY=ref.key;
     await ref.set({assistantId:ASST.id,assistantName:ASST.name,groupId:CG.id,groupTitle:CG.title,is_open:true,startTime:SESS_START,session_number:SESS_NUMBER,attended:{},notes:''});
     await Promise.all([
       db.ref('system_operations_logs').push({type:'session_open',message:`فتح جلسة #${SESS_NUMBER}: ${CG.title} — المساعد: ${ASST.name}`,timestamp:Date.now(),user:ASST.name}),
       db.ref('notifications').push({type:'session',message:`جلسة #${SESS_NUMBER} — ${ASST.name}: ${CG.title}`,icon:'fa-chalkboard-user',color:'var(--em2)',timestamp:Date.now(),read:false})
     ]);
-    sndStart();vibrate([50,30,50]);toast(`✅ جلسة #${SESS_NUMBER}: ${CG.title}`,'ok');
+    sndStart();vibrate([50,30,50]);toast(`جلسة #${SESS_NUMBER}: ${CG.title} — بدأت`,'ok');
     showActiveSection();
   }catch(err){toast('خطأ في فتح الجلسة','err');sndScanErr();console.error(err);}
 }
@@ -1104,16 +1096,16 @@ async function markAttendance(uid){
   try{
     const all=(await db.ref('students_directory').once('value')).val()||{};
     const entry=Object.entries(all).find(([,s])=>(s.uid||'').toUpperCase()===uid);
-    if(!entry){toast('❌ الطالب غير موجود في قاعدة البيانات','err');sndScanErr();vibrate([200,50,200]);flashScanCard(false);return false;}
+    if(!entry){toast('الطالب غير موجود في قاعدة البيانات','err');sndScanErr();vibrate([200,50,200]);flashScanCard(false);return false;}
     const[fid,student]=entry;
-    if(student.group_reference!==CG?.id){toast(`❌ ${student.name} ليس في هذه المجموعة`,'err');sndScanErr();vibrate([200,50,200]);flashScanCard(false);return false;}
-    if((student.wallet_balance||0)<=0){toast(`⚠️ رصيد ${student.name} غير كافٍ`,'warn');sndWarn();vibrate([100,50,100,50,100]);flashScanCard(false);return false;}
-    if((await db.ref(`attendance_sessions/${SESS_KEY}/attended/${fid}`).once('value')).exists()){toast(`⚠️ ${student.name} مسجل بالفعل`,'warn');sndWarn();vibrate([100,30,100]);flashScanCard(false);return false;}
+    if(student.group_reference!==CG?.id){toast(`${student.name} ليس في هذه المجموعة`,'err');sndScanErr();vibrate([200,50,200]);flashScanCard(false);return false;}
+    if((student.wallet_balance||0)<=0){toast(`رصيد ${student.name} غير كافٍ`,'warn');sndWarn();vibrate([100,50,100,50,100]);flashScanCard(false);return false;}
+    if((await db.ref(`attendance_sessions/${SESS_KEY}/attended/${fid}`).once('value')).exists()){toast(`${student.name} مسجل بالفعل`,'warn');sndWarn();vibrate([100,30,100]);flashScanCard(false);return false;}
     await db.ref(`students_directory/${fid}/wallet_balance`).transaction(b=>Math.max(0,(b||0)-1));
     await db.ref(`attendance_sessions/${SESS_KEY}/attended/${fid}`).set({name:student.name,uid:student.uid,timestamp:Date.now()});
     await db.ref(`attendance_ledger/${CG.id}/${new Date().toISOString().slice(0,10)}/${fid}`).set({name:student.name,time:Date.now()});
     sndScanOK();vibrate([50]);flashScanCard(true);
-    toast(`✅ ${student.name} — حدّد الواجب ↓`,'ok');return true;
+    toast(`${student.name} — حدّد الواجب`,'ok');return true;
   }catch(err){toast('خطأ في التسجيل','err');sndScanErr();console.error(err);return false;}
 }
 
@@ -1132,56 +1124,150 @@ function stopScanner(){
 function toggleManual(){sndClick();const w=el('manualWrap');w.style.display=w.style.display==='none'?'block':'none';if(w.style.display==='block')el('manualUID').focus();}
 async function doManual(){
   const uid=el('manualUID').value.trim();if(!uid)return;
-  const fb=el('manualFb');fb.textContent='⏳ جاري التحقق...';fb.style.color='var(--t2)';
+  const fb=el('manualFb');fb.textContent='جاري التحقق...';fb.style.color='var(--t2)';
   const ok=await markAttendance(uid);
-  fb.textContent=ok?'✅ تم التسجيل — حدّد الواجب':'❌ تعذر التسجيل';
+  fb.textContent=ok?'تم التسجيل — حدّد الواجب':'تعذر التسجيل';
   fb.style.color=ok?'var(--em2)':'var(--ro2)';
   if(ok)el('manualUID').value='';
   setTimeout(()=>fb.textContent='',3800);
 }
 
-/* ── REVIEW & LOCK ── */
+/* ══════════════════════════════════════════════════════════════════
+   REVIEW MODAL — زر واتساب منفصل لكل غائب
+   ══════════════════════════════════════════════════════════════════ */
 async function openReviewModal(){
   sndClick();if(!SESS_KEY)return;setPhase(3);
   try{
     const att=(await db.ref(`attendance_sessions/${SESS_KEY}/attended`).once('value')).val()||{};
     const grpSts=Object.entries(ALL_STUDENTS).filter(([,s])=>s.group_reference===CG?.id);
-    const attFids=Object.keys(att);ABS_LIST=grpSts.filter(([fid])=>!attFids.includes(fid));
+    const attFids=Object.keys(att);
+    ABS_LIST=grpSts.filter(([fid])=>!attFids.includes(fid));
     const lowBal=grpSts.filter(([,s])=>s.wallet_balance<=2);
-    el('revPresent').textContent=attFids.length;el('revAbsent').textContent=ABS_LIST.length;
-    el('revAbsList').innerHTML=ABS_LIST.length?ABS_LIST.map(([,s])=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:var(--rog);border:1px solid var(--rob);border-radius:var(--r-md);margin-bottom:6px"><div style="font-family:'Tajawal';font-weight:800;font-size:12.5px">${s.name}</div><span style="font-size:10.5px;color:var(--t3);font-family:'Poppins'">${s.parent_phone||'—'}</span></div>`).join(''):'<div class="empty-s" style="padding:8px"><p>✅ لا يوجد غائبون في هذه الجلسة</p></div>';
+    el('revPresent').textContent=attFids.length;
+    el('revAbsent').textContent=ABS_LIST.length;
+
     const lowEl=el('revLowWarn');
-    if(lowBal.length){lowEl.style.display='block';lowEl.innerHTML=`<div class="info-box info-am"><i class="fa-solid fa-triangle-exclamation"></i><span>${lowBal.length} طالب رصيدهم منخفض: ${lowBal.map(([,s])=>s.name).join('، ')}</span></div>`;}else lowEl.style.display='none';
-    if(!ABS_LIST.length){WA_SENT=true;enableLockBtn();}else{WA_SENT=false;disableLockBtn();}
+    if(lowBal.length){lowEl.style.display='block';lowEl.innerHTML=`<div class="info-box info-am"><i class="fa-solid fa-triangle-exclamation"></i><span>${lowBal.length} طالب رصيدهم منخفض: ${lowBal.map(([,s])=>s.name).join('، ')}</span></div>`;}
+    else lowEl.style.display='none';
+
+    buildAbsList();
     openM('M_review');
   }catch(err){toast('خطأ في تحميل البيانات','err');}
 }
-function enableLockBtn(){const b=el('lockBtn');b.disabled=false;b.style.opacity='1';b.style.cursor='pointer';}
-function disableLockBtn(){const b=el('lockBtn');b.disabled=true;b.style.opacity='.4';b.style.cursor='not-allowed';}
 
-async function sendAbsentWA(){
-  sndClick();if(!ABS_LIST.length){WA_SENT=true;enableLockBtn();toast('لا يوجد غائبون','ok');sndNotify();return;}
-  const profName=CFG.professor_identity||'المدرس';
-  const tpl=CFG.absent_template||`عزيزي ولي أمر الطالب {name},\nلم يحضر الطالب حصة ${CG?.title||''} اليوم.\nمع تحيات ${profName}`;
-  ABS_LIST.forEach(([,s])=>{const msg=encodeURIComponent(tpl.replace(/{name}/g,s.name||'').replace(/{teacher}/g,profName));const ph=(s.parent_phone||'').replace(/\D/g,'');const iph=ph.startsWith('0')?'2'+ph:ph;if(iph)window.open(`https://wa.me/${iph}?text=${msg}`,'_blank');});
-  WA_SENT=true;enableLockBtn();sndNotify();toast('تم فتح نوافذ واتساب','info');
+function buildAbsList(){
+  const listEl=el('revAbsList');
+  const prog=el('absProgress');
+
+  if(!ABS_LIST.length){
+    listEl.innerHTML='<div class="empty-s" style="padding:8px"><p>لا يوجد غائبون في هذه الجلسة</p></div>';
+    prog.style.display='none';
+    enableLockBtn();
+    return;
+  }
+
+  prog.style.display='block';
+  listEl.innerHTML='';
+
+  ABS_LIST.forEach(([fid,s])=>{
+    const isSent=!!WA_SENT_ABS[fid];
+    const row=document.createElement('div');row.className='wa-row';row.id='abs_wa_'+fid;
+    const ph=(s.parent_phone||'').replace(/\D/g,'');
+    const iph=ph.startsWith('0')?'2'+ph:ph;
+
+    row.innerHTML=`
+      <div style="flex:1;min-width:0">
+        <div class="wa-row-name">${s.name||'—'}</div>
+        <div class="wa-row-phone">${s.parent_phone||'—'}</div>
+      </div>
+      <button id="abs_btn_${fid}" class="btn ${isSent?'btn-wa-sent':'btn-wa'}"
+        onclick="${isSent?'':'sendOneAbsWA(\''+fid+'\',\''+encodeURIComponent(s.name)+'\',\''+iph+'\')'}"
+        ${isSent?'disabled':''}>
+        <i class="fa-brands fa-whatsapp"></i>
+        ${isSent?'تم الإرسال':'إرسال'}
+      </button>`;
+    listEl.appendChild(row);
+  });
+
+  updateAbsProgress();
 }
 
-/* ── EXAM ── */
+function sendOneAbsWA(fid,nameEnc,iph){
+  const name=decodeURIComponent(nameEnc);
+  const profName=CFG.professor_identity||'المدرس';
+  const tpl=CFG.absent_template||`عزيزي ولي أمر الطالب {name},\nلم يحضر الطالب حصة ${CG?.title||''} اليوم.\nمع تحيات ${profName}`;
+  const msg=encodeURIComponent(tpl.replace(/{name}/g,name).replace(/{teacher}/g,profName));
+  if(iph) window.open(`https://wa.me/${iph}?text=${msg}`,'_blank');
+
+  WA_SENT_ABS[fid]=true;
+  const btn=el('abs_btn_'+fid);
+  if(btn){
+    btn.className='btn btn-wa-sent btn-sm';
+    btn.disabled=true;
+    btn.innerHTML='<i class="fa-brands fa-whatsapp"></i> تم الإرسال';
+    btn.onclick=null;
+  }
+
+  sndNotify();updateAbsProgress();
+}
+
+function updateAbsProgress(){
+  const total=ABS_LIST.length;
+  const sent=ABS_LIST.filter(([fid])=>WA_SENT_ABS[fid]).length;
+  const pct=total>0?Math.round((sent/total)*100):100;
+  const fill=el('absProgressFill');
+  const txt=el('absProgressText');
+  if(fill)fill.style.width=pct+'%';
+  if(txt)txt.textContent=`${sent} / ${total} تم الإرسال`;
+  if(sent>=total&&total>=0) enableLockBtn();
+  else disableLockBtn();
+}
+
+function enableLockBtn(){const b=el('lockBtn');if(b){b.disabled=false;b.style.opacity='1';b.style.cursor='pointer';}}
+function disableLockBtn(){const b=el('lockBtn');if(b){b.disabled=true;b.style.opacity='.4';b.style.cursor='not-allowed';}}
+
+/* ══════════════════════════════════════════════════════════════════
+   EXAM MODAL — زر واتساب منفصل لكل طالب بعد إدخال الدرجة
+   ══════════════════════════════════════════════════════════════════ */
 function openExamModal(){
   el('examStep1').style.display='block';el('examStep2').style.display='none';
   el('examMaxScore').value='';el('examTitle').value='';el('examScoresList').innerHTML='';
   closeM('M_review');openM('M_exam');
 }
 function confirmExamYes(){sndClick();el('examStep1').style.display='none';el('examStep2').style.display='block';buildExamScoresList();}
+
 async function buildExamScoresList(){
   try{
     const att=(await db.ref(`attendance_sessions/${SESS_KEY}/attended`).once('value')).val()||{};
     const listEl=el('examScoresList');
     if(!Object.keys(att).length){listEl.innerHTML='<div class="empty-s" style="padding:11px"><p>لا يوجد طلاب حاضرون</p></div>';return;}
-    listEl.innerHTML=Object.entries(att).map(([fid,a])=>`<div class="exam-row"><div class="ex-name"><i class="fa-solid fa-user" style="color:var(--t4);margin-left:5px"></i>${a.name||'—'}</div><div style="display:flex;align-items:center;gap:6px"><input type="number" inputmode="decimal" class="score-inp" id="exs_${fid}" min="0" step="0.5" placeholder="—" oninput="updateOnePct('${fid}')"><div class="score-pct" id="exp_${fid}" style="color:var(--t3)">—</div></div></div>`).join('');
+    listEl.innerHTML='';
+    Object.entries(att).forEach(([fid,a])=>{
+      const isSent=!!WA_SENT_EXAM[fid];
+      const student=ALL_STUDENTS[fid];
+      const ph=(student?.parent_phone||'').replace(/\D/g,'');
+      const iph=ph.startsWith('0')?'2'+ph:ph;
+      const row=document.createElement('div');
+      row.style.cssText='margin-bottom:8px';
+      row.innerHTML=`
+        <div class="exam-row" style="flex-wrap:wrap;gap:6px">
+          <div class="ex-name"><i class="fa-solid fa-user" style="color:var(--t4);margin-left:5px"></i>${a.name||'—'}</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="number" inputmode="decimal" class="score-inp" id="exs_${fid}" min="0" step="0.5" placeholder="—" oninput="updateOnePct('${fid}')">
+            <div class="score-pct" id="exp_${fid}" style="color:var(--t3)">—</div>
+            <button id="exam_wa_btn_${fid}" class="btn btn-sm ${isSent?'btn-wa-sent':'btn-wa'}"
+              style="min-height:34px;padding:6px 12px;animation:none"
+              onclick="sendOneExamWA('${fid}','${encodeURIComponent(a.name||'')}','${iph}')"
+              ${isSent?'disabled':''}>
+              <i class="fa-brands fa-whatsapp"></i> ${isSent?'تم':'إرسال'}
+            </button>
+          </div>
+        </div>`;
+      listEl.appendChild(row);
+    });
   }catch(err){console.error(err);}
 }
+
 function updateOnePct(fid){
   const max=parseInt(el('examMaxScore')?.value)||0,score=parseFloat(el('exs_'+fid)?.value);
   const pEl=el('exp_'+fid);if(!pEl)return;
@@ -1189,31 +1275,51 @@ function updateOnePct(fid){
   else{pEl.textContent='—';pEl.style.color='var(--t3)';}
 }
 function refreshAllPcts(){document.querySelectorAll('[id^="exs_"]').forEach(inp=>updateOnePct(inp.id.replace('exs_','')));}
+
+function sendOneExamWA(fid,nameEnc,iph){
+  const name=decodeURIComponent(nameEnc);
+  const score=parseFloat(el('exs_'+fid)?.value);
+  const max=parseInt(el('examMaxScore')?.value)||0;
+  const examTitle=el('examTitle').value.trim()||'امتحان الحصة';
+  const profName=CFG.professor_identity||'المدرس';
+
+  if(!max||isNaN(score)){toast('أدخل الدرجة الكلية والدرجة أولاً','warn');return;}
+
+  const pct=Math.round((score/max)*100);
+  const gradeLabel=pct>=90?'ممتاز':pct>=75?'جيد جداً':pct>=60?'جيد':pct>=50?'مقبول':'ضعيف';
+  const msg=encodeURIComponent(`نتيجة الامتحان\n${name}\n${examTitle}\nالدرجة: ${score} / ${max}\nالنسبة: ${pct}%\nالتقدير: ${gradeLabel}\n\nمع تحيات ${profName}`);
+  if(iph) window.open(`https://wa.me/${iph}?text=${msg}`,'_blank');
+
+  WA_SENT_EXAM[fid]=true;
+  const btn=el('exam_wa_btn_'+fid);
+  if(btn){btn.className='btn btn-sm btn-wa-sent';btn.disabled=true;btn.innerHTML='<i class="fa-brands fa-whatsapp"></i> تم';}
+  sndNotify();
+}
+
 async function saveExamScores(){
   const maxScore=parseInt(el('examMaxScore').value);if(!maxScore||maxScore<1){toast('أدخل الدرجة الكلية','err');return;}
   const examTitle=el('examTitle').value.trim()||'امتحان الحصة';
   try{
     const att=(await db.ref(`attendance_sessions/${SESS_KEY}/attended`).once('value')).val()||{};
-    const today=new Date().toISOString().slice(0,10),profName=CFG.professor_identity||'المدرس';
-    const writes=[],waLinks=[];
+    const today=new Date().toISOString().slice(0,10);
+    const writes=[];
     Object.entries(att).forEach(([fid,a])=>{
       const scoreEl=el('exs_'+fid),score=parseFloat(scoreEl?.value);
       if(isNaN(score)||scoreEl?.value==='')return;
       const student=ALL_STUDENTS[fid],pctVal=Math.round((score/maxScore)*100);
       const gradeLabel=pctVal>=90?'ممتاز':pctVal>=75?'جيد جداً':pctVal>=60?'جيد':pctVal>=50?'مقبول':'ضعيف';
       writes.push(db.ref('exam_scores').push().set({student_fid:fid,student_name:a.name||'—',group_id:CG.id,group_title:CG.title,assistant_id:ASST.id,assistant_name:ASST.name,parent_phone:student?.parent_phone||'',exam_title:examTitle,score,max_score:maxScore,pct:pctVal,grade_label:gradeLabel,session_id:SESS_KEY,session_number:SESS_NUMBER||1,date:today,timestamp:Date.now()}));
-      const ph=(student?.parent_phone||'').replace(/\D/g,''),iph=ph.startsWith('0')?'2'+ph:ph;
-      if(iph)waLinks.push(`https://wa.me/${iph}?text=${encodeURIComponent(`📝 نتيجة امتحان\n👤 ${a.name}\n📚 ${examTitle}\n✏️ الدرجة: ${score} / ${maxScore}\n📊 النسبة: ${pctVal}%\n🏅 التقدير: ${gradeLabel}\n\nمع تحيات ${profName}`)}`);
     });
     if(!writes.length){toast('لم تُدخَل أي درجات','warn');return;}
     await Promise.all(writes);
     await db.ref('notifications').push({type:'exam',message:`درجات ${CG.title} — ${examTitle}`,icon:'fa-file-pen',color:'var(--vi2)',timestamp:Date.now(),read:false});
-    waLinks.forEach((url,i)=>setTimeout(()=>window.open(url,'_blank'),i*400));
-    sndNotify();toast(`✅ تم حفظ ${writes.length} درجة`,'ok');closeM('M_exam');lockSession();
+    sndNotify();toast(`تم حفظ ${writes.length} درجة`,'ok');closeM('M_exam');lockSession();
   }catch(err){toast('خطأ في حفظ الدرجات','err');sndScanErr();console.error(err);}
 }
 
-/* ── LOCK SESSION ── */
+/* ══════════════════════════════════════════════════════════════════
+   LOCK SESSION
+   ══════════════════════════════════════════════════════════════════ */
 async function lockSession(){
   if(!SESS_KEY)return;setPhase(4);
   try{
@@ -1232,9 +1338,36 @@ async function lockSession(){
     await Promise.all([db.ref('system_operations_logs').push({type:'session_close',message:`تقفيل جلسة #${SESS_NUMBER||'?'}: ${CG?.title} — حضور:${Object.keys(att).length} غياب:${absCount}`,timestamp:Date.now(),user:ASST.name}),db.ref('notifications').push({type:'session',message:`تقفيل جلسة #${SESS_NUMBER||'?'} — ${CG?.title}`,icon:'fa-lock',color:'var(--in2)',timestamp:Date.now(),read:false})]);
     clearInterval(TIMER_INT);if(SCANNER&&SCANNER_ON)try{stopScanner();}catch(e){}
     closeM('M_review');sndLock();
+
+    /* ── طلاب الواجب — زر واتساب لكل طالب ── */
     const hwNotDone=Object.entries(att).filter(([fid])=>HW_DATA[fid]&&HW_DATA[fid].done===false);
     const hwSec=el('hwLockSection'),hwList=el('hwLockList');
-    if(hwNotDone.length){hwSec.style.display='block';hwList.innerHTML=hwNotDone.map(([fid,a])=>{const reason=HW_DATA[fid]?.reason||'';return`<div style="padding:8px 11px;background:var(--rog);border:1px solid var(--rob);border-radius:var(--r-md);margin-bottom:6px"><div style="font-family:'Tajawal';font-weight:800;font-size:12.5px">${a.name||'—'}</div>${reason?`<div style="font-size:10.5px;color:var(--t3);margin-top:2px"><i class="fa-solid fa-comment"></i> ${reason}</div>`:''}</div>`;}).join('');window._hwNotDone=hwNotDone.map(([fid,a])=>({fid,name:a.name||'—',phone:ALL_STUDENTS[fid]?.parent_phone||'',reason:HW_DATA[fid]?.reason||''}));}else{hwSec.style.display='none';window._hwNotDone=[];}
+    if(hwNotDone.length){
+      hwSec.style.display='block';
+      hwList.innerHTML='';
+      hwNotDone.forEach(([fid,a])=>{
+        const reason=HW_DATA[fid]?.reason||'';
+        const student=ALL_STUDENTS[fid];
+        const ph=(student?.parent_phone||'').replace(/\D/g,'');
+        const iph=ph.startsWith('0')?'2'+ph:ph;
+        const isSent=!!WA_SENT_HW[fid];
+        const row=document.createElement('div');row.className='wa-row';
+        row.innerHTML=`
+          <div style="flex:1;min-width:0">
+            <div class="wa-row-name">${a.name||'—'}</div>
+            ${reason?`<div class="wa-row-phone">${reason}</div>`:''}
+          </div>
+          <button id="hw_wa_btn_${fid}" class="btn ${isSent?'btn-wa-sent':'btn-wa'}"
+            style="min-height:34px;padding:6px 12px;animation:none"
+            onclick="sendOneHWWA('${fid}','${encodeURIComponent(a.name||'')}','${iph}','${encodeURIComponent(reason)}')"
+            ${isSent?'disabled':''}>
+            <i class="fa-brands fa-whatsapp"></i> ${isSent?'تم الإرسال':'إرسال'}
+          </button>`;
+        hwList.appendChild(row);
+      });
+      window._hwNotDone=hwNotDone.map(([fid,a])=>({fid,name:a.name||'—',phone:ALL_STUDENTS[fid]?.parent_phone||'',reason:HW_DATA[fid]?.reason||''}));
+    }else{hwSec.style.display='none';window._hwNotDone=[];}
+
     window._lockAtt=att;window._lockAbs=ABS_LIST;window._lockGroup=CG;
     el('dlExcelBtn').onclick=()=>downloadExcelFull(att,ABS_LIST,CG);
     showSessNum(SESS_NUMBER);
@@ -1242,11 +1375,16 @@ async function lockSession(){
   }catch(err){toast('خطأ في تقفيل الجلسة','err');sndScanErr();console.error(err);}
 }
 
-function sendHomeworkWA(){
-  sndClick();const list=window._hwNotDone||[];if(!list.length){toast('لا يوجد طلاب','warn');return;}
+function sendOneHWWA(fid,nameEnc,iph,reasonEnc){
+  const name=decodeURIComponent(nameEnc);
+  const reason=decodeURIComponent(reasonEnc);
   const profName=CFG.professor_identity||'المدرس';
-  list.forEach((s,i)=>{const ph=(s.phone||'').replace(/\D/g,''),iph=ph.startsWith('0')?'2'+ph:ph;if(!iph)return;const msg=encodeURIComponent(`📋 تنبيه الواجب المنزلي\n\nعزيزي ولي أمر الطالب ${s.name},\nلم يؤدِ الطالب الواجب لحصة ${CG?.title||''} اليوم.${s.reason?'\n📌 السبب: '+s.reason:''}\n\nمع تحيات ${profName}`);setTimeout(()=>window.open(`https://wa.me/${iph}?text=${msg}`,'_blank'),i*450);});
-  sndNotify();toast(`تم فتح ${list.length} نافذة واتساب`,'ok');
+  const msg=encodeURIComponent(`تنبيه الواجب المنزلي\n\nعزيزي ولي أمر الطالب ${name},\nلم يؤدِ الطالب الواجب لحصة ${CG?.title||''} اليوم.${reason?'\nالسبب: '+reason:''}\n\nمع تحيات ${profName}`);
+  if(iph) window.open(`https://wa.me/${iph}?text=${msg}`,'_blank');
+  WA_SENT_HW[fid]=true;
+  const btn=el('hw_wa_btn_'+fid);
+  if(btn){btn.className='btn btn-wa-sent';btn.disabled=true;btn.innerHTML='<i class="fa-brands fa-whatsapp"></i> تم الإرسال';btn.onclick=null;}
+  sndNotify();
 }
 
 /* ── NOTES ── */
@@ -1277,7 +1415,8 @@ async function submitVoid(){
 /* ── FINISH ── */
 function finishSession(){
   sndClick();closeM('M_locked');
-  SESS_KEY=null;SESS_START=null;SESS_NUMBER=null;WA_SENT=false;CG=null;ABS_LIST=[];HW_DATA={};_lastAtt={};
+  SESS_KEY=null;SESS_START=null;SESS_NUMBER=null;CG=null;ABS_LIST=[];HW_DATA={};_lastAtt={};
+  WA_SENT_ABS={};WA_SENT_HW={};WA_SENT_EXAM={};
   el('attList').innerHTML='<div class="empty-s"><i class="fa-solid fa-qrcode"></i><p>لم يتم تسجيل أي حضور بعد</p></div>';
   el('attCountBadge').textContent='0';el('sessTimer').textContent='00:00:00';
   el('hwPendingBadge').style.display='none';el('manualUID').value='';
@@ -1287,44 +1426,74 @@ function finishSession(){
   initApp();
 }
 
-/* ══════════════════════════════════════════════
-   📊 EXCEL EXPORT — Professional Styled Report
-   ══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════
+   EXCEL EXPORT — Professional Clean (No Emoji)
+   ══════════════════════════════════════════════════════════════════ */
 async function downloadExcelFull(att,abs,group){
-  const X=XLSX,title=group?.title||'جلسة',today=new Date().toISOString().slice(0,10),nowFull=new Date().toLocaleString('ar-EG'),asstName=ASST?.name||'—',profName=CFG.professor_identity||asstName,sessNum=SESS_NUMBER||'?';
+  const X=XLSX;
+  const title=group?.title||'جلسة';
+  const today=new Date().toISOString().slice(0,10);
+  const nowFull=new Date().toLocaleString('ar-EG');
+  const asstName=ASST?.name||'—';
+  const profName=CFG.professor_identity||asstName;
+  const sessNum=SESS_NUMBER||'?';
 
-  /* Palette */
-  const P={
-    bg:'0A0C14',card:'101520',rowA:'0C1018',rowB:'131825',
-    hdrGreen:'0A2016',hdrBlue:'0A0E20',hdrRed:'200A0C',hdrAmber:'1E1200',hdrViolet:'12091E',
-    green:'10B981',green2:'34D399',red:'F43F5E',red2:'FB7185',
-    amber:'F59E0B',amber2:'FCD34D',indigo:'6366F1',indigo2:'818CF8',
-    violet:'8B5CF6',violet2:'A78BFA',sky:'0EA5E9',sky2:'38BDF8',
-    gold:'F59E0B',goldBright:'FDE68A',
-    t1:'F0F2FF',t2:'8A93C4',t3:'4A5280',t4:'232844',white:'FFFFFF',
+  /* ── Color Palette ── */
+  const C={
+    /* backgrounds */
+    pageBg:'0D1117',
+    sectionHdr:'161B22',
+    rowA:'0D1117',
+    rowB:'13191F',
+    /* green */
+    greenBg:'0A1F14', greenText:'00C97A', greenBorder:'14532D',
+    /* red */
+    redBg:'1F0A0A', redText:'F87171', redBorder:'7F1D1D',
+    /* amber */
+    amberBg:'1F1400', amberText:'FBB040', amberBorder:'78350F',
+    /* violet */
+    violetBg:'13091F', violetText:'A78BFA', violetBorder:'4C1D95',
+    /* blue */
+    blueBg:'091025', blueText:'6EA8FE', blueBorder:'1D3461',
+    /* neutral */
+    headerBg:'1A2233', headerText:'E2E8F0',
+    subText:'94A3B8', bodyText:'CBD5E1',
+    border:'2D3748',
+    white:'FFFFFF',
   };
 
-  function C(v,{bold=false,sz=11,fn='Cairo',color=P.t1,bg=P.bg,h='right',v_='center',wrap=false,border=null,italic=false}={}){
-    const s={font:{name:fn,sz,bold,italic,color:{rgb:color}},fill:{patternType:'solid',fgColor:{rgb:bg}},alignment:{horizontal:h,vertical:v_,wrapText:wrap,readingOrder:2}};
-    if(border)s.border=border;
-    return{v:v??'',t:typeof v==='number'?'n':'s',s};
+  /* ── Style builder ── */
+  function cell(v,{bold=false,sz=11,fn='Cairo',color=C.bodyText,bg=C.pageBg,h='right',wrapText=false,border=true,italic=false,numFmt=null}={}){
+    const s={
+      font:{name:fn,sz,bold,italic,color:{rgb:color}},
+      fill:{patternType:'solid',fgColor:{rgb:bg}},
+      alignment:{horizontal:h,vertical:'center',wrapText,readingOrder:2}
+    };
+    if(border)s.border={top:{style:'thin',color:{rgb:C.border}},bottom:{style:'thin',color:{rgb:C.border}},left:{style:'thin',color:{rgb:C.border}},right:{style:'thin',color:{rgb:C.border}}};
+    const out={v:v??'',s};
+    if(typeof v==='number')out.t='n';
+    if(numFmt)out.z=numFmt;
+    return out;
   }
-  function bord(col=P.t4,style='thin'){return{top:{style,color:{rgb:col}},bottom:{style,color:{rgb:col}},left:{style,color:{rgb:col}},right:{style,color:{rgb:col}}};}
-  function bordM(col){return bord(col,'medium');}
-  function EMP(bg=P.bg){return C('',{bg});}
-  function HDR(v,bg,color=P.white){return C(v,{bold:true,sz:11,bg,color,h:'center',v_:'center',wrap:true,border:bord(bg,'medium')});}
-  function DAT(v,bg,color=P.t1,extra={}){return C(v,{sz:11,bg,color,border:bord(P.t4),v_:'center',...extra});}
-  function NUM(v,bg,color){return C(v,{sz:13,bold:true,fn:'Calibri',bg,color,h:'center',v_:'center',border:bord(P.t4)});}
-  function STS(v,bg,color){return C(v,{bold:true,sz:11,bg,color,h:'center',v_:'center',border:bord(P.t4)});}
-  function BAN(v,bg,color,sz=16){return C(v,{bold:true,sz,bg,color,h:'center',v_:'center',border:bordM(color)});}
+  function hCell(v,bg=C.headerBg,color=C.headerText,sz=11){return cell(v,{bold:true,sz,bg,color,h:'center',border:true,fn:'Cairo'});}
+  function tCell(v,bg=C.rowA,color=C.bodyText,extra={}){return cell(v,{bg,color,border:true,...extra});}
+  function numCell(v,bg,color){return cell(v,{bold:true,sz:13,fn:'Calibri',bg,color,h:'center',border:true});}
+  function statusCell(v,bg,color){return cell(v,{bold:true,sz:11,bg,color,h:'center',border:true});}
+  function titleCell(v,bg,color,sz=14){return cell(v,{bold:true,sz,bg,color,h:'center',border:true});}
+  function emptyCell(bg=C.pageBg){return cell('',{bg,border:false});}
+
   function buildWS(rows){
     const ws={};let maxC=0;
-    rows.forEach((row,r)=>{if(!row)return;if(row.length>maxC)maxC=row.length;row.forEach((cell,c)=>{const addr=X.utils.encode_cell({r,c});ws[addr]=cell===null||cell===undefined?EMP():cell;});});
+    rows.forEach((row,r)=>{
+      if(!row)return;
+      if(row.length>maxC)maxC=row.length;
+      row.forEach((c,col)=>{ws[X.utils.encode_cell({r,c:col})]=c??emptyCell();});
+    });
     ws['!ref']=X.utils.encode_range({s:{r:0,c:0},e:{r:rows.length-1,c:maxC-1}});
     return ws;
   }
+  function mrg(ws,list){ws['!merges']=(ws['!merges']||[]).concat(list);}
   function rowH(ws,pairs){if(!ws['!rows'])ws['!rows']=[];pairs.forEach(([r,h])=>{while(ws['!rows'].length<=r)ws['!rows'].push(null);ws['!rows'][r]={hpx:h};});}
-  function mrg(ws,merges){ws['!merges']=(ws['!merges']||[]).concat(merges);}
 
   const attArr=Object.entries(att);
   const totalSts=attArr.length+(abs||[]).length;
@@ -1333,86 +1502,176 @@ async function downloadExcelFull(att,abs,group){
   const hwNotDone=attArr.filter(([fid])=>HW_DATA[fid]?.done===false);
   const hwUnset=attArr.filter(([fid])=>HW_DATA[fid]===undefined);
   const sessDur=SESS_START?Math.round((Date.now()-SESS_START)/60000):0;
-  const grColor=p=>p>=75?P.green:p>=50?P.amber:P.red;
-  const grBg=p=>p>=75?P.hdrGreen:p>=50?P.hdrAmber:P.hdrRed;
 
-  /* ── SHEET 1: SUMMARY ── */
+  /* ═══════════════ SHEET 1: SUMMARY ═══════════════ */
+  function infoRow(lbl,val,vc=C.bodyText){
+    return[
+      cell(lbl,{bold:true,bg:C.sectionHdr,color:C.subText,border:true}),
+      cell(val,{bold:true,bg:C.sectionHdr,color:vc,border:true}),
+      emptyCell(C.sectionHdr),emptyCell(C.sectionHdr)
+    ];
+  }
+  function statRow(lbl,val,vc,vbg){
+    return[
+      cell(lbl,{bold:true,bg:C.sectionHdr,color:C.subText,border:true}),
+      cell(val,{bold:true,sz:14,fn:'Calibri',bg:vbg,color:vc,h:'center',border:true}),
+      emptyCell(C.sectionHdr),emptyCell(C.sectionHdr)
+    ];
+  }
+
   const SR=[];
-  SR.push([BAN(`📊  تقرير جلسة #${sessNum}  ―  ${title}`,P.hdrBlue,P.indigo2,18),null,null,null]);
-  SR.push([EMP(P.hdrBlue),EMP(P.hdrBlue),EMP(P.hdrBlue),EMP(P.hdrBlue)]);
-  SR.push([C('📋  معلومات الجلسة',{bold:true,sz:12,bg:P.card,color:P.indigo2,h:'right',v_:'center',border:{bottom:{style:'medium',color:{rgb:P.indigo}}}}),null,null,null]);
-  SR.push([EMP(P.card),EMP(P.card),EMP(P.card),EMP(P.card)]);
-  [['👤  المساعد',asstName,P.green2],['👨‍🏫  المدرس',profName,P.indigo2],['🔢  رقم الجلسة',`#${sessNum}`,P.goldBright],['📚  المجموعة',title,P.amber2],['📅  التاريخ',today,P.t2],['🕐  البداية',SESS_START?new Date(SESS_START).toLocaleTimeString('ar-EG'):'—',P.sky2],['🕐  النهاية',new Date().toLocaleTimeString('ar-EG'),P.sky2],['⏱  المدة',`${sessDur} دقيقة`,P.violet2]].forEach(([lbl,val,vc])=>{SR.push([C(lbl,{sz:11,bold:true,bg:P.card,color:P.t3,h:'right',v_:'center',border:bord(P.t4)}),C(val,{sz:12,bold:true,bg:P.card,color:vc,h:'right',v_:'center',border:bord(P.t4)}),EMP(P.card),EMP(P.card)]);});
-  SR.push([EMP(P.bg),EMP(P.bg),EMP(P.bg),EMP(P.bg)]);
-  SR.push([C('📈  إحصائيات الحضور',{bold:true,sz:12,bg:P.card,color:P.green2,h:'right',v_:'center',border:{bottom:{style:'medium',color:{rgb:P.green}}}}),null,null,null]);
-  SR.push([EMP(P.card),EMP(P.card),EMP(P.card),EMP(P.card)]);
-  [[`👥  إجمالي`,totalSts,P.t1,P.card],[`✅  حاضرون`,attArr.length,P.green2,P.hdrGreen],[`❌  غائبون`,(abs||[]).length,P.red2,P.hdrRed],[`📊  نسبة الحضور`,attPct+'%',attPct>=75?P.green2:attPct>=50?P.amber2:P.red2,grBg(attPct)]].forEach(([lbl,val,vc,vbg])=>{SR.push([C(lbl,{sz:11,bold:true,bg:P.card,color:P.t3,h:'right',v_:'center',border:bord(P.t4)}),C(val,{sz:14,bold:true,fn:'Calibri',bg:vbg,color:vc,h:'center',v_:'center',border:bord(P.t4)}),EMP(P.card),EMP(P.card)]);});
-  SR.push([EMP(P.bg),EMP(P.bg),EMP(P.bg),EMP(P.bg)]);
-  SR.push([C('📋  إحصائيات الواجب',{bold:true,sz:12,bg:P.card,color:P.amber2,h:'right',v_:'center',border:{bottom:{style:'medium',color:{rgb:P.amber}}}}),null,null,null]);
-  SR.push([EMP(P.card),EMP(P.card),EMP(P.card),EMP(P.card)]);
-  [[`✅  أدّوا`,hwDone.length,P.green2,P.hdrGreen],[`❌  لم يؤدّوا`,hwNotDone.length,P.red2,P.hdrRed],[`⏳  غير محدد`,hwUnset.length,P.amber2,P.hdrAmber]].forEach(([lbl,val,vc,vbg])=>{SR.push([C(lbl,{sz:11,bold:true,bg:P.card,color:P.t3,h:'right',v_:'center',border:bord(P.t4)}),C(val,{sz:14,bold:true,fn:'Calibri',bg:vbg,color:vc,h:'center',v_:'center',border:bord(P.t4)}),EMP(P.card),EMP(P.card)]);});
-  SR.push([EMP(P.bg),EMP(P.bg),EMP(P.bg),EMP(P.bg)]);
-  SR.push([C(`${profName}  •  Brothers Studio v4.1  •  ${nowFull}`,{italic:true,sz:9,bg:P.bg,color:P.t3,h:'center'}),null,null,null]);
+  /* Title */
+  SR.push([titleCell(`Brothers Studio  |  تقرير جلسة #${sessNum}  |  ${title}`,C.headerBg,C.headerText,13),null,null,null]);
+  SR.push([cell(`${asstName}  |  ${profName}  |  ${today}  |  ${nowFull}`,{italic:true,sz:9,bg:C.sectionHdr,color:C.subText,h:'center',border:false}),null,null,null]);
+  SR.push([emptyCell(),emptyCell(),emptyCell(),emptyCell()]);
+
+  /* Session Info */
+  SR.push([hCell('معلومات الجلسة',C.blueBg,C.blueText),null,null,null]);
+  SR.push(infoRow('المساعد',asstName,C.greenText));
+  SR.push(infoRow('المدرس',profName,C.blueText));
+  SR.push(infoRow('رقم الجلسة',`${sessNum}`,C.amberText));
+  SR.push(infoRow('المجموعة',title,C.bodyText));
+  SR.push(infoRow('التاريخ',today,C.subText));
+  SR.push(infoRow('وقت البدء',SESS_START?new Date(SESS_START).toLocaleTimeString('ar-EG'):'—',C.bodyText));
+  SR.push(infoRow('وقت الانتهاء',new Date().toLocaleTimeString('ar-EG'),C.bodyText));
+  SR.push(infoRow('مدة الجلسة',`${sessDur} دقيقة`,C.bodyText));
+  SR.push([emptyCell(),emptyCell(),emptyCell(),emptyCell()]);
+
+  /* Attendance Stats */
+  SR.push([hCell('احصاءات الحضور',C.greenBg,C.greenText),null,null,null]);
+  SR.push(statRow('اجمالي الطلاب',totalSts,C.bodyText,C.sectionHdr));
+  SR.push(statRow('الحاضرون',attArr.length,C.greenText,C.greenBg));
+  SR.push(statRow('الغائبون',(abs||[]).length,C.redText,C.redBg));
+  SR.push(statRow('نسبة الحضور',attPct+'%',attPct>=75?C.greenText:attPct>=50?C.amberText:C.redText,attPct>=75?C.greenBg:attPct>=50?C.amberBg:C.redBg));
+  SR.push([emptyCell(),emptyCell(),emptyCell(),emptyCell()]);
+
+  /* Homework Stats */
+  SR.push([hCell('احصاءات الواجب',C.amberBg,C.amberText),null,null,null]);
+  SR.push(statRow('ادّوا الواجب',hwDone.length,C.greenText,C.greenBg));
+  SR.push(statRow('لم يؤدوا الواجب',hwNotDone.length,C.redText,C.redBg));
+  SR.push(statRow('غير محدد',hwUnset.length,C.amberText,C.amberBg));
+
   const wsSummary=buildWS(SR);
-  wsSummary['!cols']=[{wch:28},{wch:26},{wch:10},{wch:10}];
-  mrg(wsSummary,[{s:{r:0,c:0},e:{r:0,c:3}},{s:{r:1,c:0},e:{r:1,c:3}},{s:{r:SR.length-1,c:0},e:{r:SR.length-1,c:3}}]);
-  SR.forEach((row,i)=>{if(row&&row[0]&&String(row[0].v||'').match(/^[📋📈]/)){mrg(wsSummary,[{s:{r:i,c:0},e:{r:i,c:3}},{s:{r:i+1,c:0},e:{r:i+1,c:3}}]);}if(row&&row[1]&&row[2]&&row[2].v==='')mrg(wsSummary,[{s:{r:i,c:1},e:{r:i,c:3}}]);});
-  rowH(wsSummary,[[0,50],[1,8]]);
+  wsSummary['!cols']=[{wch:22},{wch:24},{wch:8},{wch:8}];
+  mrg(wsSummary,[
+    {s:{r:0,c:0},e:{r:0,c:3}},
+    {s:{r:1,c:0},e:{r:1,c:3}},
+    {s:{r:2,c:0},e:{r:2,c:3}},
+    {s:{r:3,c:0},e:{r:3,c:3}},
+    {s:{r:12,c:0},e:{r:12,c:3}},
+    {s:{r:13,c:0},e:{r:13,c:3}},
+    {s:{r:19,c:0},e:{r:19,c:3}},
+  ]);
+  SR.forEach((row,i)=>{
+    if(row&&row[1]&&row[2])mrg(wsSummary,[{s:{r:i,c:1},e:{r:i,c:3}}]);
+  });
+  rowH(wsSummary,[[0,38],[1,18],[2,8],[3,28]]);
 
-  /* ── SHEET 2: ATTENDANCE ── */
-  const AR=[];const AC=7;
-  AR.push([BAN(`✅  كشف الحضور  ―  جلسة #${sessNum}  ―  ${title}`,P.hdrGreen,P.green2,15),...Array(AC-1).fill(null)]);
-  AR.push([C(`${asstName}  |  ${today}  |  حضور: ${attArr.length} من ${totalSts}  |  ${attPct}%`,{sz:10,italic:true,bg:P.card,color:P.t3,h:'center'}),...Array(AC-1).fill(null)]);
-  AR.push([...Array(AC).fill(EMP(P.bg))]);
-  AR.push(['م','اسم الطالب','رقم الطالب','وقت الحضور','الواجب','سبب عدم الواجب','هاتف ولي الأمر'].map((h,i)=>HDR(h,P.hdrGreen,i===0||i===2||i===6?P.green2:P.white)));
-  if(!attArr.length){AR.push([C('لا يوجد حضور',{bold:true,sz:12,bg:P.hdrAmber,color:P.amber2,h:'center',border:bord(P.t4)}),...Array(AC-1).fill(EMP(P.hdrAmber))]);}
-  else{attArr.forEach(([fid,a],i)=>{const isA=i%2===1,rbg=isA?P.rowB:P.rowA,hw=HW_DATA[fid],hwSet=hw!==undefined,hwDoneV=hw?.done,hwReason=hw&&!hwDoneV?(hw.reason||'—'):'—',hwStatus=hwSet?(hwDoneV?'✅ أدى':'❌ لم يؤدِ'):'⏳ لم يُحدَّد',hwSBg=hwSet?(hwDoneV?P.hdrGreen:P.hdrRed):P.hdrAmber,hwSC=hwSet?(hwDoneV?P.green2:P.red2):P.amber2,student=ALL_STUDENTS[fid];AR.push([NUM(i+1,rbg,P.green2),DAT(a.name||'—',rbg,P.t1,{bold:true,h:'right'}),C(a.uid||'—',{sz:10,fn:'Courier New',bg:rbg,color:P.indigo2,h:'center',v_:'center',border:bord(P.t4)}),DAT(a.timestamp?new Date(a.timestamp).toLocaleTimeString('ar-EG'):'—',rbg,P.sky2,{h:'center',fn:'Calibri',sz:11}),STS(hwStatus,hwSBg,hwSC),DAT(hwReason,rbg,P.t3,{h:'right',wrap:true}),DAT(student?.parent_phone||'—',rbg,P.t2,{h:'center',fn:'Calibri',sz:10})]);});}
-  AR.push([...Array(AC).fill(EMP(P.bg))]);
-  AR.push([C(`الإجمالي`,{bold:true,sz:11,bg:P.hdrGreen,color:P.green2,h:'center',v_:'center',border:bordM(P.green)}),C(`${attArr.length} حاضر  |  ${attPct}% نسبة الحضور`,{bold:true,sz:12,bg:P.hdrGreen,color:P.white,h:'right',v_:'center',border:bordM(P.green)}),...Array(AC-2).fill(EMP(P.hdrGreen))]);
-  AR.push([...Array(AC).fill(EMP(P.bg))]);
-  AR.push([C(`${profName}  •  جلسة #${sessNum}  •  ${nowFull}`,{italic:true,sz:9,bg:P.bg,color:P.t3,h:'center'}),...Array(AC-1).fill(null)]);
+  /* ═══════════════ SHEET 2: ATTENDANCE ═══════════════ */
+  const AC=7;const AR=[];
+  AR.push([titleCell(`كشف الحضور  |  جلسة #${sessNum}  |  ${title}  |  ${today}`,C.greenBg,C.greenText,12),...Array(AC-1).fill(null)]);
+  AR.push([cell(`المساعد: ${asstName}  |  حضور: ${attArr.length} / ${totalSts}  |  ${attPct}%`,{italic:true,sz:9,bg:C.sectionHdr,color:C.subText,h:'center',border:false}),...Array(AC-1).fill(null)]);
+  AR.push([...Array(AC).fill(emptyCell())]);
+  AR.push(['م','اسم الطالب','رقم الطالب','وقت الحضور','حالة الواجب','ملاحظة الواجب','هاتف ولي الامر'].map((h,i)=>hCell(h,C.headerBg,i===0?C.greenText:C.headerText)));
+
+  if(!attArr.length){
+    AR.push([cell('لا يوجد حضور في هذه الجلسة',{bold:true,sz:11,bg:C.amberBg,color:C.amberText,h:'center',border:true}),...Array(AC-1).fill(emptyCell(C.amberBg))]);
+  }else{
+    attArr.forEach(([fid,a],i)=>{
+      const rbg=i%2===0?C.rowA:C.rowB;
+      const hw=HW_DATA[fid],hwSet=hw!==undefined,hwDoneV=hw?.done;
+      const hwStatus=hwSet?(hwDoneV?'حضر وأدى':'لم يؤدِ'):'غير محدد';
+      const hwReason=hwSet&&!hwDoneV?(hw?.reason||'—'):'—';
+      const hwBg=hwSet?(hwDoneV?C.greenBg:C.redBg):C.amberBg;
+      const hwColor=hwSet?(hwDoneV?C.greenText:C.redText):C.amberText;
+      const student=ALL_STUDENTS[fid];
+      AR.push([
+        numCell(i+1,rbg,C.greenText),
+        tCell(a.name||'—',rbg,C.bodyText,{bold:true}),
+        cell(a.uid||'—',{sz:10,fn:'Courier New',bg:rbg,color:C.blueText,h:'center',border:true}),
+        cell(a.timestamp?new Date(a.timestamp).toLocaleTimeString('ar-EG'):'—',{sz:10,fn:'Calibri',bg:rbg,color:C.subText,h:'center',border:true}),
+        statusCell(hwStatus,hwBg,hwColor),
+        tCell(hwReason,rbg,C.subText,{wrapText:true}),
+        cell(student?.parent_phone||'—',{sz:10,fn:'Calibri',bg:rbg,color:C.subText,h:'center',border:true})
+      ]);
+    });
+  }
+
+  AR.push([...Array(AC).fill(emptyCell())]);
+  AR.push([
+    cell('الاجمالي',{bold:true,sz:11,bg:C.greenBg,color:C.greenText,h:'center',border:true}),
+    cell(`${attArr.length} حاضر  |  نسبة الحضور: ${attPct}%`,{bold:true,sz:11,bg:C.greenBg,color:C.headerText,border:true}),
+    ...Array(AC-2).fill(emptyCell(C.greenBg))
+  ]);
+
   const wsAtt=buildWS(AR);
-  wsAtt['!cols']=[{wch:6},{wch:28},{wch:16},{wch:14},{wch:18},{wch:34},{wch:18}];
-  mrg(wsAtt,[{s:{r:0,c:0},e:{r:0,c:AC-1}},{s:{r:1,c:0},e:{r:1,c:AC-1}},{s:{r:2,c:0},e:{r:2,c:AC-1}},{s:{r:AR.length-2,c:0},e:{r:AR.length-2,c:AC-1}},{s:{r:AR.length-1,c:0},e:{r:AR.length-1,c:AC-1}},{s:{r:AR.length-3,c:1},e:{r:AR.length-3,c:AC-1}}]);
+  wsAtt['!cols']=[{wch:5},{wch:26},{wch:15},{wch:13},{wch:16},{wch:32},{wch:17}];
+  mrg(wsAtt,[
+    {s:{r:0,c:0},e:{r:0,c:AC-1}},
+    {s:{r:1,c:0},e:{r:1,c:AC-1}},
+    {s:{r:2,c:0},e:{r:2,c:AC-1}},
+    {s:{r:AR.length-2,c:0},e:{r:AR.length-2,c:AC-1}},
+    {s:{r:AR.length-1,c:1},e:{r:AR.length-1,c:AC-1}},
+  ]);
   if(!attArr.length)mrg(wsAtt,[{s:{r:4,c:0},e:{r:4,c:AC-1}}]);
-  rowH(wsAtt,[[0,44],[1,20],[2,7],[3,32]]);
+  rowH(wsAtt,[[0,36],[1,18],[2,7],[3,28]]);
 
-  /* ── SHEET 3: ABSENT ── */
-  const ABSR=[];const ABSC=6;
-  ABSR.push([BAN(`❌  كشف الغياب  ―  جلسة #${sessNum}  ―  ${title}`,P.hdrRed,P.red2,15),...Array(ABSC-1).fill(null)]);
-  ABSR.push([C(`${asstName}  |  ${today}  |  غياب: ${(abs||[]).length}`,{sz:10,italic:true,bg:P.card,color:P.t3,h:'center'}),...Array(ABSC-1).fill(null)]);
-  ABSR.push([...Array(ABSC).fill(EMP(P.bg))]);
-  ABSR.push(['م','اسم الطالب','المجموعة','المساعد','هاتف ولي الأمر','الحالة'].map((h,i)=>HDR(h,P.hdrRed,i===0||i===4?P.red2:P.white)));
-  if(!(abs||[]).length){ABSR.push([C('✅ لا يوجد غائبون',{bold:true,sz:12,bg:P.hdrGreen,color:P.green2,h:'center',border:bord(P.t4)}),...Array(ABSC-1).fill(EMP(P.hdrGreen))]);}
-  else{(abs||[]).forEach(([,s],i)=>{const isA=i%2===1,rbg=isA?P.rowB:P.hdrRed;ABSR.push([NUM(i+1,rbg,P.red2),DAT(s.name||'—',rbg,P.t1,{bold:true,h:'right'}),DAT(title,rbg,P.t2,{h:'center'}),DAT(asstName,rbg,P.t2,{h:'center'}),DAT(s.parent_phone||'—',rbg,P.sky2,{h:'center',fn:'Calibri',sz:10}),STS('غائب',P.hdrRed,P.red2)]);});}
-  ABSR.push([...Array(ABSC).fill(EMP(P.bg))]);
-  ABSR.push([C(`${profName}  •  جلسة #${sessNum}  •  ${nowFull}`,{italic:true,sz:9,bg:P.bg,color:P.t3,h:'center'}),...Array(ABSC-1).fill(null)]);
-  const wsAbs=buildWS(ABSR);wsAbs['!cols']=[{wch:6},{wch:28},{wch:20},{wch:18},{wch:18},{wch:10}];
-  mrg(wsAbs,[{s:{r:0,c:0},e:{r:0,c:ABSC-1}},{s:{r:1,c:0},e:{r:1,c:ABSC-1}},{s:{r:2,c:0},e:{r:2,c:ABSC-1}},{s:{r:ABSR.length-1,c:0},e:{r:ABSR.length-1,c:ABSC-1}}]);
+  /* ═══════════════ SHEET 3: ABSENT ═══════════════ */
+  const ABSC=5;const ABSR=[];
+  ABSR.push([titleCell(`كشف الغياب  |  جلسة #${sessNum}  |  ${title}  |  ${today}`,C.redBg,C.redText,12),...Array(ABSC-1).fill(null)]);
+  ABSR.push([cell(`المساعد: ${asstName}  |  غائبون: ${(abs||[]).length}`,{italic:true,sz:9,bg:C.sectionHdr,color:C.subText,h:'center',border:false}),...Array(ABSC-1).fill(null)]);
+  ABSR.push([...Array(ABSC).fill(emptyCell())]);
+  ABSR.push(['م','اسم الطالب','المجموعة','هاتف ولي الامر','الحالة'].map((h,i)=>hCell(h,C.headerBg,i===0?C.redText:C.headerText)));
+
+  if(!(abs||[]).length){
+    ABSR.push([cell('لا يوجد غائبون في هذه الجلسة',{bold:true,sz:11,bg:C.greenBg,color:C.greenText,h:'center',border:true}),...Array(ABSC-1).fill(emptyCell(C.greenBg))]);
+  }else{
+    (abs||[]).forEach(([,s],i)=>{
+      const rbg=i%2===0?C.rowA:C.rowB;
+      ABSR.push([numCell(i+1,rbg,C.redText),tCell(s.name||'—',rbg,C.bodyText,{bold:true}),tCell(title,rbg,C.subText,{h:'center'}),cell(s.parent_phone||'—',{sz:10,fn:'Calibri',bg:rbg,color:C.subText,h:'center',border:true}),statusCell('غائب',C.redBg,C.redText)]);
+    });
+  }
+
+  ABSR.push([...Array(ABSC).fill(emptyCell())]);
+  const wsAbs=buildWS(ABSR);
+  wsAbs['!cols']=[{wch:5},{wch:26},{wch:20},{wch:18},{wch:10}];
+  mrg(wsAbs,[{s:{r:0,c:0},e:{r:0,c:ABSC-1}},{s:{r:1,c:0},e:{r:1,c:ABSC-1}},{s:{r:2,c:0},e:{r:2,c:ABSC-1}}]);
   if(!(abs||[]).length)mrg(wsAbs,[{s:{r:4,c:0},e:{r:4,c:ABSC-1}}]);
-  rowH(wsAbs,[[0,44],[1,20],[2,7],[3,32]]);
+  rowH(wsAbs,[[0,36],[1,18],[2,7],[3,28]]);
 
-  /* ── SHEET 4: HOMEWORK ── */
-  const HWR=[];const HWC=5;const hwAll=[...hwNotDone,...hwDone];
-  HWR.push([BAN(`📋  كشف الواجب  ―  جلسة #${sessNum}  ―  ${title}`,P.hdrAmber,P.amber2,15),...Array(HWC-1).fill(null)]);
-  HWR.push([C(`أدّوا: ${hwDone.length}  |  لم يؤدّوا: ${hwNotDone.length}  |  غير محدد: ${hwUnset.length}`,{sz:10,italic:true,bg:P.card,color:P.t3,h:'center'}),...Array(HWC-1).fill(null)]);
-  HWR.push([...Array(HWC).fill(EMP(P.bg))]);
-  HWR.push(['م','اسم الطالب','حالة الواجب','سبب عدم الأداء','هاتف ولي الأمر'].map((h,i)=>HDR(h,P.hdrAmber,i===0||i===2||i===4?P.amber2:P.white)));
-  if(!hwAll.length){HWR.push([C('⏳ لم يُحدَّد الواجب بعد',{bold:true,sz:12,bg:P.hdrAmber,color:P.amber2,h:'center',border:bord(P.t4)}),...Array(HWC-1).fill(EMP(P.hdrAmber))]);}
-  else{hwAll.forEach(([fid,a],i)=>{const hw=HW_DATA[fid],isDone=hw?.done===true,reason=!isDone?(hw?.reason||'—'):'—',student=ALL_STUDENTS[fid],isA=i%2===1,rbg=isDone?(isA?'0C1A10':P.hdrGreen):(isA?'1A0C0F':P.hdrRed);HWR.push([NUM(i+1,rbg,isDone?P.green2:P.red2),DAT(a.name||'—',rbg,P.t1,{bold:true,h:'right'}),STS(isDone?'✅ أدى':'❌ لم يؤدِ',isDone?P.hdrGreen:P.hdrRed,isDone?P.green2:P.red2),DAT(reason,rbg,P.t3,{h:'right',wrap:true}),DAT(student?.parent_phone||'—',rbg,P.sky2,{h:'center',fn:'Calibri',sz:10})]);});}
-  HWR.push([...Array(HWC).fill(EMP(P.bg))]);
-  HWR.push([C(`${profName}  •  جلسة #${sessNum}  •  ${nowFull}`,{italic:true,sz:9,bg:P.bg,color:P.t3,h:'center'}),...Array(HWC-1).fill(null)]);
-  const wsHW=buildWS(HWR);wsHW['!cols']=[{wch:6},{wch:28},{wch:20},{wch:36},{wch:18}];
-  mrg(wsHW,[{s:{r:0,c:0},e:{r:0,c:HWC-1}},{s:{r:1,c:0},e:{r:1,c:HWC-1}},{s:{r:2,c:0},e:{r:2,c:HWC-1}},{s:{r:HWR.length-1,c:0},e:{r:HWR.length-1,c:HWC-1}}]);
+  /* ═══════════════ SHEET 4: HOMEWORK ═══════════════ */
+  const HWC=5;const HWR=[];
+  const hwAll=[...hwNotDone,...hwDone];
+  HWR.push([titleCell(`كشف الواجب  |  جلسة #${sessNum}  |  ${title}  |  ${today}`,C.amberBg,C.amberText,12),...Array(HWC-1).fill(null)]);
+  HWR.push([cell(`ادّوا: ${hwDone.length}  |  لم يؤدوا: ${hwNotDone.length}  |  غير محدد: ${hwUnset.length}`,{italic:true,sz:9,bg:C.sectionHdr,color:C.subText,h:'center',border:false}),...Array(HWC-1).fill(null)]);
+  HWR.push([...Array(HWC).fill(emptyCell())]);
+  HWR.push(['م','اسم الطالب','حالة الواجب','سبب عدم الاداء','هاتف ولي الامر'].map((h,i)=>hCell(h,C.headerBg,i===0?C.amberText:C.headerText)));
+
+  if(!hwAll.length){
+    HWR.push([cell('لم يُحدَّد الواجب بعد',{bold:true,sz:11,bg:C.amberBg,color:C.amberText,h:'center',border:true}),...Array(HWC-1).fill(emptyCell(C.amberBg))]);
+  }else{
+    hwAll.forEach(([fid,a],i)=>{
+      const hw=HW_DATA[fid],isDone=hw?.done===true;
+      const reason=!isDone?(hw?.reason||'—'):'—';
+      const student=ALL_STUDENTS[fid];
+      const rbg=isDone?(i%2===0?C.greenBg:'0C1A10'):(i%2===0?C.redBg:'1A0F0F');
+      HWR.push([numCell(i+1,rbg,isDone?C.greenText:C.redText),tCell(a.name||'—',rbg,C.bodyText,{bold:true}),statusCell(isDone?'ادّى الواجب':'لم يؤدِ',isDone?C.greenBg:C.redBg,isDone?C.greenText:C.redText),tCell(reason,rbg,C.subText,{wrapText:true}),cell(student?.parent_phone||'—',{sz:10,fn:'Calibri',bg:rbg,color:C.subText,h:'center',border:true})]);
+    });
+  }
+
+  HWR.push([...Array(HWC).fill(emptyCell())]);
+  const wsHW=buildWS(HWR);
+  wsHW['!cols']=[{wch:5},{wch:26},{wch:18},{wch:34},{wch:18}];
+  mrg(wsHW,[{s:{r:0,c:0},e:{r:0,c:HWC-1}},{s:{r:1,c:0},e:{r:1,c:HWC-1}},{s:{r:2,c:0},e:{r:2,c:HWC-1}}]);
   if(!hwAll.length)mrg(wsHW,[{s:{r:4,c:0},e:{r:4,c:HWC-1}}]);
-  rowH(wsHW,[[0,44],[1,20],[2,7],[3,32]]);
+  rowH(wsHW,[[0,36],[1,18],[2,7],[3,28]]);
 
-  /* ── ASSEMBLE WORKBOOK ── */
+  /* ═══════════════ BUILD WORKBOOK ═══════════════ */
   const wb=X.utils.book_new();
-  X.utils.book_append_sheet(wb,wsSummary,'📊 ملخص');
-  X.utils.book_append_sheet(wb,wsAtt,'✅ الحضور');
-  X.utils.book_append_sheet(wb,wsAbs,'❌ الغياب');
-  X.utils.book_append_sheet(wb,wsHW,'📋 الواجب');
+  X.utils.book_append_sheet(wb,wsSummary,'ملخص الجلسة');
+  X.utils.book_append_sheet(wb,wsAtt,'كشف الحضور');
+  X.utils.book_append_sheet(wb,wsAbs,'كشف الغياب');
+  X.utils.book_append_sheet(wb,wsHW,'كشف الواجب');
 
   /* Optional exam sheet */
   try{
@@ -1422,23 +1681,29 @@ async function downloadExcelFull(att,abs,group){
       const exList=Object.values(exams).sort((a,b)=>b.pct-a.pct);
       const exTtl=exList[0]?.exam_title||'الامتحان';
       const avgPct=Math.round(exList.reduce((s,e)=>s+(e.pct||0),0)/exList.length);
-      const EXR=[];const EXC=8;
-      EXR.push([BAN(`📝  نتائج الامتحان  ―  ${exTtl}  ―  جلسة #${sessNum}`,P.hdrViolet,P.violet2,15),...Array(EXC-1).fill(null)]);
-      EXR.push([C(`${asstName}  |  ${today}  |  عدد: ${exList.length}  |  متوسط: ${avgPct}%`,{sz:10,italic:true,bg:P.card,color:P.t3,h:'center'}),...Array(EXC-1).fill(null)]);
-      EXR.push([...Array(EXC).fill(EMP(P.bg))]);
-      EXR.push(['الترتيب','اسم الطالب','الامتحان','الدرجة','من','النسبة','التقدير','هاتف ولي الأمر'].map((h,i)=>HDR(h,P.hdrViolet,i===0||i===3||i===5?P.violet2:P.white)));
-      exList.forEach((ex,i)=>{const isA=i%2===1,p=ex.pct||0,vc=grColor(p),vbg=grBg(p),rbg=isA?P.rowB:vbg;EXR.push([NUM(i+1,rbg,P.violet2),DAT(ex.student_name||'—',rbg,P.t1,{bold:true,h:'right'}),DAT(ex.exam_title||'—',rbg,P.t2,{h:'center'}),NUM(ex.score??'—',vbg,vc),DAT(ex.max_score||'—',rbg,P.t3,{h:'center',fn:'Calibri',sz:11}),STS(p+'%',vbg,vc),STS(ex.grade_label||'—',vbg,vc),DAT(ex.parent_phone||'—',rbg,P.sky2,{h:'center',fn:'Calibri',sz:10})]);});
-      EXR.push([...Array(EXC).fill(EMP(P.bg))]);
-      EXR.push([C(`${profName}  •  ${exTtl}  •  ${nowFull}`,{italic:true,sz:9,bg:P.bg,color:P.t3,h:'center'}),...Array(EXC-1).fill(null)]);
-      const wsEx=buildWS(EXR);wsEx['!cols']=[{wch:8},{wch:26},{wch:22},{wch:10},{wch:8},{wch:10},{wch:12},{wch:18}];
-      mrg(wsEx,[{s:{r:0,c:0},e:{r:0,c:EXC-1}},{s:{r:1,c:0},e:{r:1,c:EXC-1}},{s:{r:2,c:0},e:{r:2,c:EXC-1}},{s:{r:EXR.length-1,c:0},e:{r:EXR.length-1,c:EXC-1}}]);
-      rowH(wsEx,[[0,44],[1,20],[2,7],[3,32]]);
-      X.utils.book_append_sheet(wb,wsEx,'📝 الامتحان');
+      const EXC=8;const EXR=[];
+      EXR.push([titleCell(`نتائج الامتحان  |  ${exTtl}  |  جلسة #${sessNum}  |  ${today}`,C.violetBg,C.violetText,12),...Array(EXC-1).fill(null)]);
+      EXR.push([cell(`عدد الطلاب: ${exList.length}  |  المتوسط: ${avgPct}%  |  ${asstName}`,{italic:true,sz:9,bg:C.sectionHdr,color:C.subText,h:'center',border:false}),...Array(EXC-1).fill(null)]);
+      EXR.push([...Array(EXC).fill(emptyCell())]);
+      EXR.push(['الترتيب','اسم الطالب','الامتحان','الدرجة','من','النسبة','التقدير','هاتف ولي الامر'].map((h,i)=>hCell(h,C.headerBg,i===0||i===3||i===5?C.violetText:C.headerText)));
+      exList.forEach((ex,i)=>{
+        const p=ex.pct||0;
+        const vc=p>=75?C.greenText:p>=50?C.amberText:C.redText;
+        const vbg=p>=75?C.greenBg:p>=50?C.amberBg:C.redBg;
+        const rbg=i%2===0?C.rowA:C.rowB;
+        EXR.push([numCell(i+1,rbg,C.violetText),tCell(ex.student_name||'—',rbg,C.bodyText,{bold:true}),tCell(ex.exam_title||'—',rbg,C.subText,{h:'center'}),numCell(ex.score??'—',vbg,vc),cell(ex.max_score||'—',{sz:11,fn:'Calibri',bg:rbg,color:C.subText,h:'center',border:true}),statusCell(p+'%',vbg,vc),statusCell(ex.grade_label||'—',vbg,vc),cell(ex.parent_phone||'—',{sz:10,fn:'Calibri',bg:rbg,color:C.subText,h:'center',border:true})]);
+      });
+      EXR.push([...Array(EXC).fill(emptyCell())]);
+      const wsEx=buildWS(EXR);
+      wsEx['!cols']=[{wch:8},{wch:24},{wch:20},{wch:9},{wch:7},{wch:9},{wch:12},{wch:18}];
+      mrg(wsEx,[{s:{r:0,c:0},e:{r:0,c:EXC-1}},{s:{r:1,c:0},e:{r:1,c:EXC-1}},{s:{r:2,c:0},e:{r:2,c:EXC-1}}]);
+      rowH(wsEx,[[0,36],[1,18],[2,7],[3,28]]);
+      X.utils.book_append_sheet(wb,wsEx,'نتائج الامتحان');
     }
   }catch(e){console.warn('Exam sheet:',e);}
 
-  X.writeFile(wb,`${profName}_جلسة#${sessNum}_${title}_${today}.xlsx`);
-  sndNotify();toast('✅ تم تحميل ملف Excel الاحترافي','ok');
+  X.writeFile(wb,`Brothers_Studio_${sessNum}_${title}_${today}.xlsx`);
+  sndNotify();toast('تم تحميل ملف Excel','ok');
 }
 </script>
 </body>
