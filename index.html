@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Brothers Studio — بوابة المساعد</title>
+<title>Aura Studio — بوابة المساعد</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -440,7 +440,7 @@ body{
     </div>
   </div>
   <div class="sp-text">
-    <div class="sp-name">BROTHERS STUDIO</div>
+    <div class="sp-name">AURA STUDIO</div>
     <div class="sp-tag">Assistant Portal v4.2</div>
     <div class="sp-dots">
       <div class="sp-dot"></div><div class="sp-dot"></div>
@@ -458,7 +458,7 @@ body{
   </div>
   <div class="wb-hi">أهلاً وسهلاً بك يا</div>
   <div class="wb-name" id="wbName">—</div>
-  <div class="wb-role">مساعد <span id="wbTeacherName">Brothers Studio</span></div>
+  <div class="wb-role">مساعد <span id="wbTeacherName">Aura Studio</span></div>
   <div class="wb-div"></div>
   <div class="wb-stars">⭐ ⭐ ⭐</div>
   <div class="wb-bar-wrap"><div class="wb-bar"></div></div>
@@ -471,14 +471,14 @@ body{
     <div class="login-logo-ring">
       <img src="logo.jpg" alt="" onerror="this.style.display='none'">
     </div>
-    <div class="login-title" id="loginTitle">Brothers Studio</div>
+    <div class="login-title" id="loginTitle">Aura Studio</div>
     <div class="login-sub">ASSISTANT PORTAL</div>
   </div>
   <div class="lc">
     <div class="lc-handle"></div>
     <div class="lc-head">
       <div class="lc-greet">مرحباً بك في نظام</div>
-      <div class="lc-title" id="lcTitle">Brothers Studio</div>
+      <div class="lc-title" id="lcTitle">Aura Studio</div>
       <div><span class="lc-role"><i class="fa-solid fa-chalkboard-user"></i> دخول المساعد</span></div>
     </div>
     <div id="lerr" class="Ferr"><i class="fa-solid fa-circle-xmark"></i> الكود غير صحيح، حاول مرة أخرى</div>
@@ -496,7 +496,7 @@ body{
     <div class="tb-brand">
       <div class="tb-logo-box"><img src="logo.jpg" class="tb-logo" alt="" onerror="this.style.display='none'"></div>
       <div class="tb-brand-text">
-        <div class="tb-sysname" id="tbSysName">Brothers Studio</div>
+        <div class="tb-sysname" id="tbSysName">Aura Studio</div>
         <div class="tb-subtitle">ASSISTANT PORTAL</div>
       </div>
     </div>
@@ -675,7 +675,7 @@ body{
         </button>
       </div>
 
-      <div class="page-footer" id="pageFooter">BROTHERS STUDIO v4.2</div>
+      <div class="page-footer" id="pageFooter">AURA STUDIO v4.2</div>
     </div>
   </div>
 </div><!-- /WRAP -->
@@ -826,7 +826,7 @@ body{
 
 <script>
 /* ═══════════════════════════════════════════
-   BROTHERS STUDIO v4.2 — ASSISTANT PORTAL
+   AURA STUDIO v4.2 — ASSISTANT PORTAL
    ═══════════════════════════════════════════ */
 const _FC={apiKey:"AIzaSyD971ixQUVYZxTtjAkl7U8bC-ZbsZgCUX4",authDomain:"brothers-studio-attendance.firebaseapp.com",databaseURL:"https://brothers-studio-attendance-default-rtdb.europe-west1.firebasedatabase.app",projectId:"brothers-studio-attendance",storageBucket:"brothers-studio-attendance.firebasestorage.app",messagingSenderId:"149223396857",appId:"1:149223396857:web:2d8629ef8f76581e35d928"};
 if(!firebase.apps.length)firebase.initializeApp(_FC);
@@ -886,7 +886,7 @@ window.addEventListener('online',()=>{const b=el('netbar');b.className='back';b.
 window.addEventListener('offline',()=>{const b=el('netbar');b.className='offline';b.textContent='لا يوجد اتصال بالإنترنت';});
 
 function applySystemName(n){
-  n=n||'Brothers Studio';
+  n=n||'Aura Studio';
   document.title=`${n} — بوابة المساعد`;
   ['tbSysName','loginTitle','lcTitle','wbTeacherName'].forEach(id=>{const e=el(id);if(e)e.textContent=n;});
   const f=el('pageFooter');if(f)f.textContent=`${n} v4.2`;
@@ -963,7 +963,7 @@ async function initApp(){
   try{
     const[gS,cS,sS,cfgS]=await Promise.all([db.ref('app_configurations/groups').once('value'),db.ref('app_configurations/centers').once('value'),db.ref('students_directory').once('value'),db.ref('app_configurations').once('value')]);
     ALL_GROUPS=gS.val()||{};ALL_CENTERS=cS.val()||{};ALL_STUDENTS=sS.val()||{};CFG=cfgS.val()||{};
-    applySystemName(CFG.professor_identity||ASST.name||'Brothers Studio');
+    applySystemName(CFG.professor_identity||ASST.name||'Aura Studio');
     el('asstName').textContent=ASST.name||'—';
     db.ref('students_directory').on('value',snap=>{ALL_STUDENTS=snap.val()||{};});
     const oS=await db.ref('attendance_sessions').orderByChild('assistantId').equalTo(ASST.id).once('value');
@@ -1521,7 +1521,7 @@ async function downloadExcelFull(att,abs,group){
 
   const SR=[];
   /* Title */
-  SR.push([titleCell(`Brothers Studio  |  تقرير جلسة #${sessNum}  |  ${title}`,C.headerBg,C.headerText,13),null,null,null]);
+  SR.push([titleCell(`Aura Studio  |  تقرير جلسة #${sessNum}  |  ${title}`,C.headerBg,C.headerText,13),null,null,null]);
   SR.push([cell(`${asstName}  |  ${profName}  |  ${today}  |  ${nowFull}`,{italic:true,sz:9,bg:C.sectionHdr,color:C.subText,h:'center',border:false}),null,null,null]);
   SR.push([emptyCell(),emptyCell(),emptyCell(),emptyCell()]);
 
@@ -1702,7 +1702,7 @@ async function downloadExcelFull(att,abs,group){
     }
   }catch(e){console.warn('Exam sheet:',e);}
 
-  X.writeFile(wb,`Brothers_Studio_${sessNum}_${title}_${today}.xlsx`);
+  X.writeFile(wb,`Aura_Studio_${sessNum}_${title}_${today}.xlsx`);
   sndNotify();toast('تم تحميل ملف Excel','ok');
 }
 </script>
