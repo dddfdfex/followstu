@@ -1,0 +1,27 @@
+{
+  "name": "Aura Studio Portal",
+  "short_name": "Aura Portal",
+  "description": "بوابة المساعد — Aura Studio",
+  "start_url": "/followstu/",
+  "scope": "/followstu/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#05060D",
+  "theme_color": "#05060D",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
